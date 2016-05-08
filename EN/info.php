@@ -49,30 +49,30 @@ else if (isset($_POST['action']) && $_POST['action'] == 'iamok') {
 <?php if (isset($message2)) { ?>
     <p style="color:#0f0; font-weight:bold;"><?= htmlentities($message2) ?></p>
 <?php } else { ?>
-    <p>Si vous en avez la possibilit&eacute;, apportez nous quelques informations sur votre urgence.</p>
+    <p>If able, please inform us more about your current situation.</p>
 <?php if (isset($message1)) { ?>
       <p style="color:#0f0; font-weight:bold;"><?= htmlentities($message1) ?></p>
 <?php } ?>
     <form method="post" action="/info.php">
       <ul class="checkbox">
-        <li><label><input type="checkbox" name="urgence[]" value="1" id="urgence_1" /> Incendie</label></li>
-        <li><label><input type="checkbox" name="urgence[]" value="2" id="urgence_2" /> Accident de la route</label></li>
-        <li><label><input type="checkbox" name="urgence[]" value="4" id="urgence_4" /> Blessure</label></li>
-        <li><label><input type="checkbox" name="urgence[]" value="8" id="urgence_8" /> Attentat</label></li>
+        <li><label><input type="checkbox" name="urgence[]" value="1" id="urgence_1" /> Fire</label></li>
+        <li><label><input type="checkbox" name="urgence[]" value="2" id="urgence_2" /> Road accident</label></li>
+        <li><label><input type="checkbox" name="urgence[]" value="4" id="urgence_4" /> Injury</label></li>
+        <li><label><input type="checkbox" name="urgence[]" value="8" id="urgence_8" /> Violence</label></li>
       </ul>
       <div>
-        <label for="infos">Plus de details</label>
+        <label for="infos">Details</label>
         <textarea name="infos" id="infos"></textarea>
       </div>
 
-      <div id="send-info"><button name="action" value="send">ENVOYER LES DETAILS</button></div>
-	<p class="itsok">Plus besoin d'aide? Cliquez ici</p>
+      <div id="send-info"><button name="action" value="send">SEND DETAILS</button></div>
+	<p class="itsok">Are you out of danger? Please let us know by clicking the following button:</p>
 	
-      <div id="send-ok"><button name="action" value="iamok">JE NE SUIS PLUS EN DANGER</button></div>
+      <div id="send-ok"><button name="action" value="iamok">I'M SAFE NOW</button></div>
     </form>
 <?php } ?>
 
-    <p class="legal">*Toutes personnes utilisant ce service d'aide aux victimes de mani&egrave;re abusive s'expose &agrave; des poursuites judiciaires qui peuvent mener &agrave; des condamnations p&eacute;nales.</p>
+    <p class="legal">*Irresponsible use of this emergency service is punishable under federal law.</p>
   </div>
   </body>
 </html>

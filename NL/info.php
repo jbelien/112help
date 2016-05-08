@@ -40,39 +40,39 @@ else if (isset($_POST['action']) && $_POST['action'] == 'iamok') {
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>112 Help</title>
+    <title>112 Hulp</title>
     <link href="/style.css" rel="stylesheet">
   </head>
   <body>
   <div id="content">
-    <div id="logo">112HELP.be</div>
+    <div id="logo">112HULP.be</div>
 <?php if (isset($message2)) { ?>
     <p style="color:#0f0; font-weight:bold;"><?= htmlentities($message2) ?></p>
 <?php } else { ?>
-    <p>Si vous en avez la possibilit&eacute;, apportez nous quelques informations sur votre urgence.</p>
+    <p>Noodgeval type.</p>
 <?php if (isset($message1)) { ?>
       <p style="color:#0f0; font-weight:bold;"><?= htmlentities($message1) ?></p>
 <?php } ?>
     <form method="post" action="/info.php">
       <ul class="checkbox">
-        <li><label><input type="checkbox" name="urgence[]" value="1" id="urgence_1" /> Incendie</label></li>
-        <li><label><input type="checkbox" name="urgence[]" value="2" id="urgence_2" /> Accident de la route</label></li>
-        <li><label><input type="checkbox" name="urgence[]" value="4" id="urgence_4" /> Blessure</label></li>
-        <li><label><input type="checkbox" name="urgence[]" value="8" id="urgence_8" /> Attentat</label></li>
+        <li><label><input type="checkbox" name="urgence[]" value="1" id="urgence_1" /> Brand</label></li>
+        <li><label><input type="checkbox" name="urgence[]" value="2" id="urgence_2" /> Verkeersongeval</label></li>
+        <li><label><input type="checkbox" name="urgence[]" value="4" id="urgence_4" /> Verwonding</label></li>
+        <li><label><input type="checkbox" name="urgence[]" value="8" id="urgence_8" /> Aanslag</label></li>
       </ul>
       <div>
-        <label for="infos">Plus de details</label>
+        <label for="infos">Meer details</label>
         <textarea name="infos" id="infos"></textarea>
       </div>
 
-      <div id="send-info"><button name="action" value="send">ENVOYER LES DETAILS</button></div>
-	<p class="itsok">Plus besoin d'aide? Cliquez ici</p>
-	
-      <div id="send-ok"><button name="action" value="iamok">JE NE SUIS PLUS EN DANGER</button></div>
+      <div id="send-info"><button name="action" value="send">DETAILS VERZENDEN</button></div>
+	    <p class="itsok">Ik heb geen hulp meer nodig ? Klik hier</p>
+
+      <div id="send-ok"><button name="action" value="iamok">IK BEN NIET MEER IN GEVAAR</button></div>
     </form>
 <?php } ?>
 
-    <p class="legal">*Toutes personnes utilisant ce service d'aide aux victimes de mani&egrave;re abusive s'expose &agrave; des poursuites judiciaires qui peuvent mener &agrave; des condamnations p&eacute;nales.</p>
+    <p class="legal">*Alle personen gebruikers die deze dienst misbruiken worden blootgesteld aan rechtszaken die kunnen leiden tot strafrechtelijke veroordelingen.</p>
   </div>
   </body>
 </html>

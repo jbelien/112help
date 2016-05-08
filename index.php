@@ -1,11 +1,36 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
-date_default_timezone_set('Europe/Brussels');
+
+$ini = parse_ini_file('settings.ini', TRUE);
+
+switch ($_SERVER['HTTP_HOST']) {
+  case '112help.be': $lang = 'en'; break;
+  case '112hulp.be': $lang = 'nl'; break;
+  case '112aide.be': $lang = 'fr'; break;
+  default:
+    $languages = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+    $lang = strtolower(substr(current($languages), 0, 2));
+    break;
+}
+
+if ($lang == 'fr' || $lang == 'nl') {
+  putenv('LC_TIME='.$lang.'_BE.UTF-8');
+  putenv('LC_MESSAGES='.$lang.'_BE.UTF-8');
+  setlocale(LC_TIME, $lang.'_BE.UTF-8');
+  if (defined('LC_MESSAGES')) setlocale(LC_MESSAGES, $lang.'_BE.UTF-8');
+}
+else {
+  putenv('LC_ALL=en_US.UTF-8');
+  setlocale(LC_ALL, 'en_US.UTF-8');
+}
+bindtextdomain('112help', __DIR__.'/locale');
+bind_textdomain_codeset('112help', 'UTF-8');
+textdomain('112help');
 
 session_start();
 
-if (isset($_GET['name' ])) $_SESSION['name' ] = trim($_GET['name' ]);
-if (isset($_GET['phone'])) $_SESSION['phone'] = trim($_GET['phone']);
+if (isset($_GET['name' ])) $_SESSION['name' ] = trim(urldecode($_GET['name' ])); else if (isset($_SESSION['name' ])) unset($_SESSION['name' ]);
+if (isset($_GET['phone'])) $_SESSION['phone'] = trim(urldecode($_GET['phone'])); else if (isset($_SESSION['phone'])) unset($_SESSION['phone']);
 
 if (isset($_POST['action'], $_POST['lat'], $_POST['lng']) && $_POST['action'] == 'send') {
   $headers = (function_exists('apache_request_headers') ? apache_request_headers() : $_SERVER);
@@ -18,7 +43,7 @@ if (isset($_POST['action'], $_POST['lat'], $_POST['lng']) && $_POST['action'] ==
 
   $sh = shell_exec('whois '.(isset($forward) ? $forward : $_SERVER['REMOTE_ADDR']));
 
-  $mysqli = new MySQLi('localhost', '112help_cHeca7ru', 'Z7j5CesTephudRes', '112help');
+  $mysqli = new MySQLi($ini['mysql']['host'], $ini['mysql']['username'], $ini['mysql']['passwd'], $ini['mysql']['dbname'], $ini['mysql']['port']);
   $mysqli->set_charset('utf8');
 
   $qsz  = "INSERT INTO `help` (";
@@ -60,62 +85,62 @@ if (isset($_POST['action'], $_POST['lat'], $_POST['lng']) && $_POST['action'] ==
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>112 Help</title>
-    <link href="/style.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
   </head>
   <body>
-  <div id="content">
-    <div id="logo">112HELP.be <strong style="color:#ffff00;">** PROTOTYPE **</strong></div>
-    <h1>JE SUIS EN DANGER ET J'AI BESOIN D'AIDE!*</h1>
+  <div class="container">
+    <h1 id="logo" style="margin-bottom:0;"><?= strtoupper($_SERVER['HTTP_HOST']) ?></h1>
+    <h2 style="color:#ffff00; margin:0;">** PROTOTYPE **</h2>
+    <h1 style="font-size:1.5em;"><?= _('I\'M IN DANGER AND I NEED HELP') ?>*</h1>
     <p id="error" style="color:#f00; font-weight:bold;"></p>
-    <form id="form" action="/index.php" method="post" autocomplete="off">
+    <form id="location" action="/index.php" method="post" autocomplete="off">
       <input type="hidden" name="batt" id="batt" value="-1" readonly="readonly">
       <input type="hidden" name="time" id="time" readonly="readonly">
 <?php if (isset($_SESSION['name'])) { ?>
       <div>
-        <label for="name">Nom :</label>
+        <label for="name"><?= _('Name') ?> :</label>
         <?= (isset($_SESSION['name' ]) ? '<input type="text" name="name" id="name" value="'.htmlentities($_SESSION['name' ]).'" readonly="readonly">'.PHP_EOL : '') ?>
       </div>
 <?php } ?>
 <?php if (isset($_SESSION['phone'])) { ?>
       <div>
-        <label for="phone">T&eacute;l&eacute;phone :</label>
+        <label for="phone"><?= _('Phone') ?> :</label>
         <?= (isset($_SESSION['phone']) ? ' <input type="text" name="phone" id="phone" value="'.htmlentities($_SESSION['phone']).'" readonly="readonly">'.PHP_EOL : '') ?>
       </div>
 <?php } ?>
-      <p id="loading">Geolocalisation en attente de permission et/ou en train de charger...</p>
+      <p id="loading"><?= _('Requesting access / Loading location data...') ?></p>
       <div id="geolocation" style="display:none;">
         <div>
-          <label for="lat">Latitude :</label>
+          <label for="lat"><?= _('Latitude') ?> :</label>
           <input type="text" name="lat" id="lat" readonly="readonly">
         </div>
         <div>
-          <label for="lng">Longitude :</label>
+          <label for="lng"><?= _('Longitude') ?> :</label>
           <input type="text" name="lng" id="lng" readonly="readonly">
         </div>
         <div>
-          <label for="acc">Pr&eacute;cision (m.) :</label>
+          <label for="acc"><?= _('Accuracy') ?> (m.) :</label>
           <input type="text" name="acc" id="acc" readonly="readonly">
         </div>
         <div>
-          <label>Adresse :</label><br>
+          <label><?= _('Address') ?> :</label><br>
           <address id="addr"></address>
         </div>
         <div id="send">
-          <button type="submit" name="action" value="send">ENVOYER MA LOCALISATION</button>
+          <button type="submit" name="action" value="send"><?= _('SEND MY LOCATION') ?></button>
         </div>
       </div>
     </form>
-    <p class="legal">* Toutes personnes utilisant ce service d'aide aux victimes de mani&egrave;re abusive s'expose &agrave; des poursuites judiciaires qui peuvent mener &agrave; des condamnations p&eacute;nales.</p>
+    <p class="legal">* <?= _('Irresponsible use of this emergency service is punishable under federal law.') ?></p>
   </div>
   <script>
     function init() {
-      // Chrome : need HTTPS : https://www.chromium.org/Home/chromium-security/prefer-secure-origins-for-powerful-new-features
       if ('geolocation' in navigator) {
         navigator.geolocation.getCurrentPosition(function(position) {
           document.getElementById('loading').style.display = 'none';
           document.getElementById('geolocation').style.display = '';
 
-          console.log(position);
+          //console.log(position);
 
           document.getElementById('time').value = position.timestamp;
           document.getElementById('lat').value = Math.round(position.coords.latitude  * 1000000) / 1000000;
@@ -124,7 +149,7 @@ if (isset($_POST['action'], $_POST['lat'], $_POST['lng']) && $_POST['action'] ==
 
           var geocoder = new google.maps.Geocoder;
           geocoder.geocode({'location': {lat: position.coords.latitude, lng: position.coords.longitude} }, function(results, status) {
-            console.log(results, status);
+            //console.log(results, status);
             if (status === google.maps.GeocoderStatus.OK) {
               document.getElementById('addr').innerText = results[0].formatted_address;
             }
@@ -146,17 +171,12 @@ if (isset($_POST['action'], $_POST['lat'], $_POST['lng']) && $_POST['action'] ==
 
       if ('battery' in navigator) {
         navigator.getBattery().then(function(battery) {
-          console.log(battery);
+          //console.log(battery);
           document.getElementById('batt').value = battery.level;
         });
       }
     }
   </script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_p27IkNE2nxfTCtuf5oxyGUsmz4R7i34&callback=init" async defer></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_p27IkNE2nxfTCtuf5oxyGUsmz4R7i34&amp;language=<?= $lang ?>&amp;callback=init" async defer></script>
   </body>
 </html>
-<!--
-<?php
-$sh = shell_exec('whois 174.116.185.44'); var_dump($sh);
-?>
--->

@@ -1,6 +1,9 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
-date_default_timezone_set('Europe/Brussels');
+
+$ini = parse_ini_file('../settings.ini', TRUE);
+
+session_start(); if (!isset($_SESSION['user'])) { header('Location:login.php'); exit(); }
 ?>
 <!DOCTYPE html>
 <html lang="en" style="height:100%;">
@@ -10,7 +13,7 @@ date_default_timezone_set('Europe/Brussels');
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>112 Help - Backend</title>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="../css/admin.css">
   </head>
 
   <body style="height:100%;">
@@ -27,7 +30,7 @@ date_default_timezone_set('Europe/Brussels');
       <div class="row" style="height:100%;">
         <div class="col-sm-2 col-md-1 sidebar">
           <ul class="nav nav-sidebar">
-            <li><a href="admin.php">Real Time</a></li>
+            <li><a href="index.php">Real Time</a></li>
             <li class="active"><a href="map.php">Map</a></li>
             <li><a href="twitter.php">Twitter Feed</a></li>
           </ul>
@@ -55,7 +58,7 @@ date_default_timezone_set('Europe/Brussels');
       map = new google.maps.Map(document.getElementById('map'), options);
 
 <?php
-$mysqli = new MySQLi('localhost', '112help_cHeca7ru', 'Z7j5CesTephudRes', '112help');
+$mysqli = new MySQLi($ini['mysql']['host'], $ini['mysql']['username'], $ini['mysql']['passwd'], $ini['mysql']['dbname'], $ini['mysql']['port']);
 $mysqli->set_charset('utf8');
 $q = $mysqli->query("SELECT `id`, `accuracy`, `indanger`, X(`position`) AS `lng`, Y(`position`) AS `lat` FROM `help` /*WHERE `datetime` >= '".date('Y-m-d H:is', time()-24*60*60)."'*/ ORDER BY `datetime` DESC") or trigger_error($mysqli->error);
 while ($r = $q->fetch_assoc()) {

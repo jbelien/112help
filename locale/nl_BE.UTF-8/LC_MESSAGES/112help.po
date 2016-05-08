@@ -1,0 +1,98 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-05-08 13:30+0200\n"
+"PO-Revision-Date: 2016-05-08 13:33+0200\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Last-Translator: Jonathan Beliën\n"
+"Language-Team: \n"
+"X-Generator: Poedit 1.8.7\n"
+
+#: index.php:79 index.php:94
+msgid "I'M IN DANGER AND I NEED HELP"
+msgstr "IK BEN IN GEVAAR EN IK HEB HULP NODIG"
+
+#: index.php:86 index.php:101
+msgid "Name"
+msgstr "Naam"
+
+#: index.php:92 index.php:107
+msgid "Phone"
+msgstr "Telefoon"
+
+#: index.php:96 index.php:111
+msgid "Requesting access / Loading location data..."
+msgstr ""
+
+#: index.php:99 index.php:114
+msgid "Latitude"
+msgstr "Breedte"
+
+#: index.php:103 index.php:118
+msgid "Longitude"
+msgstr "Lengte"
+
+#: index.php:107 index.php:122
+msgid "Accuracy"
+msgstr "Nauwkeurigheid"
+
+#: index.php:111 index.php:126
+msgid "Address"
+msgstr "Adres"
+
+#: index.php:115 index.php:130
+msgid "SEND MY LOCATION"
+msgstr "IK STUUR MIJN POSITIE"
+
+#: index.php:119 index.php:134 info.php:101
+msgid ""
+"Irresponsible use of this emergency service is punishable under federal law."
+msgstr ""
+"Alle personen gebruikers die deze dienst misbruiken worden blootgesteld aan "
+"rechtszaken die kunnen leiden tot strafrechtelijke veroordelingen."
+
+#: info.php:78
+msgid "If able, please inform us more about your current situation."
+msgstr ""
+
+#: info.php:84
+msgid "Fire"
+msgstr "Brand"
+
+#: info.php:85
+msgid "Road accident"
+msgstr "Verkeersongeval"
+
+#: info.php:86
+msgid "Injury"
+msgstr "Verwonding"
+
+#: info.php:87
+msgid "Violence"
+msgstr "Aanslag"
+
+#: info.php:90
+msgid "Details"
+msgstr "Meer details"
+
+#: info.php:94
+msgid "SEND DETAILS"
+msgstr "DETAILS VERZENDEN"
+
+#: info.php:96
+msgid ""
+"Are you out of danger ? Please let us know by clicking the following button"
+msgstr "Ik heb geen hulp meer nodig ? Klik hier"
+
+#: info.php:97
+msgid "I'M SAFE NOW"
+msgstr "IK BEN NIET MEER IN GEVAAR"

@@ -1,0 +1,101 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-05-08 13:30+0200\n"
+"PO-Revision-Date: 2016-05-08 13:32+0200\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Last-Translator: Jonathan Beliën\n"
+"Language-Team: \n"
+"X-Generator: Poedit 1.8.7\n"
+
+#: index.php:79 index.php:94
+msgid "I'M IN DANGER AND I NEED HELP"
+msgstr "JE SUIS EN DANGER ET J'AI BESOIN D'AIDE"
+
+#: index.php:86 index.php:101
+msgid "Name"
+msgstr "Nom"
+
+#: index.php:92 index.php:107
+msgid "Phone"
+msgstr "Téléphone"
+
+#: index.php:96 index.php:111
+msgid "Requesting access / Loading location data..."
+msgstr "Géolocalisation en attente de permission et/ou en train de charger..."
+
+#: index.php:99 index.php:114
+msgid "Latitude"
+msgstr "Latitude"
+
+#: index.php:103 index.php:118
+msgid "Longitude"
+msgstr "Longitude"
+
+#: index.php:107 index.php:122
+msgid "Accuracy"
+msgstr "Précision"
+
+#: index.php:111 index.php:126
+msgid "Address"
+msgstr "Adresse"
+
+#: index.php:115 index.php:130
+msgid "SEND MY LOCATION"
+msgstr "ENVOYER MA LOCALISATION"
+
+#: index.php:119 index.php:134 info.php:101
+msgid ""
+"Irresponsible use of this emergency service is punishable under federal law."
+msgstr ""
+"Toutes personnes utilisant ce service d'aide aux victimes de manière abusive "
+"s'expose à des poursuites judiciaires qui peuvent mener à des condamnations "
+"pénales."
+
+#: info.php:78
+msgid "If able, please inform us more about your current situation."
+msgstr ""
+"Si vous en avez la possibilité, apportez nous quelques informations sur "
+"votre urgence."
+
+#: info.php:84
+msgid "Fire"
+msgstr "Incendie"
+
+#: info.php:85
+msgid "Road accident"
+msgstr "Accident de la route"
+
+#: info.php:86
+msgid "Injury"
+msgstr "Blessure"
+
+#: info.php:87
+msgid "Violence"
+msgstr "Violence"
+
+#: info.php:90
+msgid "Details"
+msgstr "Plus de détails"
+
+#: info.php:94
+msgid "SEND DETAILS"
+msgstr "ENVOYER LES DETAILS"
+
+#: info.php:96
+msgid ""
+"Are you out of danger ? Please let us know by clicking the following button"
+msgstr "Plus besoin d'aide ? Cliquez ici"
+
+#: info.php:97
+msgid "I'M SAFE NOW"
+msgstr "JE NE SUIS PLUS EN DANGER"

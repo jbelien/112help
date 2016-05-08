@@ -1,8 +1,11 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
-date_default_timezone_set('Europe/Brussels');
 
-include('proj4php-2.0.7/vendor/autoload.php');
+$ini = parse_ini_file('../settings.ini', TRUE);
+
+session_start(); if (!isset($_SESSION['user'])) { header('Location:login.php'); exit(); }
+
+include('../proj4php-2.0.7/vendor/autoload.php');
 
 use proj4php\Proj4php;
 use proj4php\Proj;
@@ -23,7 +26,7 @@ $projWGS84  = new Proj('EPSG:4326' , $proj4);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>112 Help - Backend</title>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="../css/admin.css">
   </head>
 
   <body>
@@ -40,7 +43,7 @@ $projWGS84  = new Proj('EPSG:4326' , $proj4);
       <div class="row">
         <div class="col-sm-2 col-md-1 sidebar">
           <ul class="nav nav-sidebar">
-            <li class="active"><a href="admin.php">Real Time</a></li>
+            <li class="active"><a href="index.php">Real Time</a></li>
             <li><a href="map.php">Map</a></li>
             <li><a href="twitter.php">Twitter Feed</a></li>
           </ul>
@@ -66,7 +69,7 @@ $projWGS84  = new Proj('EPSG:4326' , $proj4);
             </thead>
             <tbody>
 <?php
-$mysqli = new MySQLi('localhost', '112help_cHeca7ru', 'Z7j5CesTephudRes', '112help');
+$mysqli = new MySQLi($ini['mysql']['host'], $ini['mysql']['username'], $ini['mysql']['passwd'], $ini['mysql']['dbname'], $ini['mysql']['port']);
 $mysqli->set_charset('utf8');
 $q = $mysqli->query("SELECT *, X(`position`) AS `lng`, Y(`position`) AS `lat` FROM `help` /*WHERE `datetime` >= '".date('Y-m-d H:is', time()-24*60*60)."'*/ ORDER BY `datetime` DESC") or trigger_error($mysqli->error);
 $i = 0; while ($r = $q->fetch_assoc()) {

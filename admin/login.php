@@ -7,7 +7,7 @@ if (isset($_POST['action'], $_POST['login'], $_POST['passwd']) && $_POST['action
 
   $q = $mysqli->query("SELECT * FROM `users` WHERE `login` = '".$mysqli->real_escape_string($_POST['login'])."' LIMIT 1") or trigger_error($mysqli->error);
   if ($q->num_rows == 1) {
-    $r = $q->fetch_row(); var_dump($r, password_needs_rehash($r[2], PASSWORD_DEFAULT));
+    $r = $q->fetch_row();
     if (password_verify($_POST['passwd'], $r[2]) === TRUE) {
       if (password_needs_rehash($r[2], PASSWORD_DEFAULT) === TRUE) {
         $new_hash = password_hash($_POST['passwd'], PASSWORD_DEFAULT);
@@ -40,7 +40,7 @@ if (isset($_POST['action'], $_POST['login'], $_POST['passwd']) && $_POST['action
     <div class="container">
       <div class="text-center"><img src="logo.png" alt="112 Help" style="margin:15px 0;"></div>
       <div class="row">
-        <div class="col-xs-4 col-md-offset-4">
+        <div class="col-sm-4 col-md-offset-4">
           <form method="post" action="login.php" class="well" autocomplete="off">
             <div class="form-group control-group">
               <label class="control-label" for="inputLogin">Identifiant</label>

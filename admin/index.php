@@ -10,7 +10,7 @@ $mysqli->set_charset('utf8');
 
 $relative = 604800; if (isset($_GET['relative'])) $relative = intval($_GET['relative']);
 
-$messages = array();
+$messages = array(); $count1 = 0; $count2 = 0; $count4 = 0; $count8 = 0;
 
 $qsz  = "SELECT *, X(`position`) AS `lng`, Y(`position`) AS `lat` FROM `help`";
 if ($relative > 0) $qsz .= " WHERE `datetime` >= '".date('Y-m-d H:i:s', time()-$relative)."'";
@@ -18,6 +18,11 @@ $qsz .= " ORDER BY `datetime` DESC";
 
 $q = $mysqli->query($qsz) or trigger_error($mysqli->error);
 while ($r = $q->fetch_assoc()) {
+  if ($r['urgence'] & 1) $count1++;
+  if ($r['urgence'] & 2) $count2++;
+  if ($r['urgence'] & 4) $count4++;
+  if ($r['urgence'] & 8) $count8++;
+
   if (is_null($r['address'])) {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$r['lat'].','.$r['lng'].'&sensor=false');
@@ -83,7 +88,13 @@ $mysqli->close();
             </select>
             </form>
           </div>
-          <div class="col-sm-4 text-center"><?= sprintf(ngettext('%d message', '%d messages', $count), $count) ?></div>
+          <div class="col-sm-4 text-center">
+            <?= sprintf(ngettext('%d message', '%d messages', $count), $count) ?> :
+            <span class="small" style="color:rgb(0,128,255);"><?= $count1 ?></span>
+            <span class="small" style="color:rgb(255,128,0);"><?= $count2 ?></span>
+            <span class="small" style="color:rgb(255,128,255);"><?= $count4 ?></span>
+            <span class="small" style="color:rgb(128,0,255);"><?= $count8 ?></span>
+          </div>
           <div class="col-sm-4 text-center"><time datetime="<?= date('c') ?>"><?= strftime('%e %b %G %H:%M:%S'); ?></time></div>
         </div>
       </div>
@@ -138,15 +149,15 @@ $mysqli->close();
       echo '<div>';
         echo '<strong>'.strftime('%e %b %G %H:%M:%S', strtotime($m['datetime'])).'</strong>';
         echo ' (';
-        if ($interval->y > 0) echo sprintf(_('%d years ago'), $interval->y);
-        else if ($interval->m > 0) echo sprintf(_('%d months ago'), $interval->m);
-        else if ($interval->d > 0) echo sprintf(_('%d days ago'), $interval->d);
-        else if ($interval->h > 0) echo sprintf(_('%d hours ago'), $interval->h);
-        else if ($interval->i > 0) echo sprintf(_('%d minutes ago'), $interval->i);
+        if ($interval->y > 0) echo sprintf(ngettext('%d year ago', '%d years ago', $interval->y), $interval->y);
+        else if ($interval->m > 0) echo sprintf(ngettext('%d month ago', '%d months ago', $interval->m), $interval->m);
+        else if ($interval->d > 0) echo sprintf(ngettext('%d day ago', '%d days ago', $interval->d), $interval->d);
+        else if ($interval->h > 0) echo sprintf(ngettext('%d hour ago', '%d hours ago', $interval->h), $interval->h);
+        else if ($interval->i > 0) echo sprintf(ngettext('%d minute ago', '%d minutes ago', $interval->i), $interval->i);
         echo ')';
       echo '</div>';
       if (!is_null($m['name']) || !is_null($m['phone'])) echo '<div class="text-info">'.htmlentities($m['name']).' - '.htmlentities($m['phone']).'</div>';
-      echo '<div>'.($m['accuracy'] <= 250 ? $m['address'] : '<i class="text-muted">Not enough precision ('.$m['accuracy'].' m.)</i>').'</div>';
+      echo '<div>'.($m['accuracy'] <= 250 ? $m['address'] : '<i class="text-muted">Not enough precision to display address ('.$m['accuracy'].' m.)</i>').'</div>';
       if (!is_null($m['battery'])) echo '<div>Battery: '.$m['battery'].'%</div>';
       echo '<div>';
         $u = array();
@@ -191,10 +202,10 @@ $mysqli->close();
 <?php
   reset($messages);
   foreach ($messages as $i => $m) {
-    echo '        var feature = new ol.Feature({ indanger: '.$m['indanger'].', geometry: new ol.geom.Circle(ol.proj.fromLonLat(['.$m['lng'].','.$m['lat'].']),'.$m['accuracy'].') });';
+    echo '        var feature = new ol.Feature({ indanger: '.$m['indanger'].', urgence: '.intval($m['urgence']).', geometry: new ol.geom.Circle(ol.proj.fromLonLat(['.$m['lng'].','.$m['lat'].']),'.$m['accuracy'].') });';
     echo 'feature.setId("'.$m['id'].'");';
     echo 'features.push(feature);'.PHP_EOL;
-    echo '        var feature = new ol.Feature({ indanger: '.$m['indanger'].', type: "center", geometry: new ol.geom.Point(ol.proj.fromLonLat(['.$m['lng'].','.$m['lat'].'])) });';
+    echo '        var feature = new ol.Feature({ indanger: '.$m['indanger'].', urgence: '.intval($m['urgence']).', type: "center", geometry: new ol.geom.Point(ol.proj.fromLonLat(['.$m['lng'].','.$m['lat'].'])) });';
     echo 'feature.setId("'.$m['id'].'-center");';
     echo 'features.push(feature);'.PHP_EOL;
   }
@@ -207,22 +218,49 @@ $mysqli->close();
             var p = feature.getProperties();
 
             if (p.type == 'center') {
+              if (p.indanger == 0) {
+                var fillColor = 'rgba(0,128,0,0.3)';
+              } else if (p.urgence & 1) {
+                var fillColor = 'rgb(0,128,255)';
+              } else if (p.urgence & 2) {
+                var fillColor = 'rgb(255,128,0)';
+              } else if (p.urgence & 4) {
+                var fillColor = 'rgb(255,128,255)';
+              } else if (p.urgence & 8) {
+                var fillColor = 'rgb(128,0,255)';
+              } else {
+                var fillColor = 'rgb(255,0,0)';
+              }
+
               return new ol.style.Style({
                 image: new ol.style.Circle({
                   radius: 6,
-                  fill: new ol.style.Fill({ color: (p.indanger == 1 ? 'rgb(255,0,0)' : 'rgb(0,128,0)') }),
+                  fill: new ol.style.Fill({ color: fillColor }),
                   stroke: new ol.style.Stroke({ color: '#fff', width: 2 }),
                 }),
                 zIndex: (p.indanger == 1 ? 19 : 11)
               });
             } else {
-              if (p.indanger == 1) {
-                var strokeColor = 'rgb(255,0,0)', strokeWidth = 3, fillColor = false;
-                if (feature.getGeometry().getRadius() <= 10000) { fillColor = 'rgba(255,0,0,0.1)'; }
+              if (p.indanger == 0) {
+                var strokeColor = 'rgba(0,128,0,0.3)', strokeWidth = 1, fillColor = false;
+              } else if (p.urgence & 1) {
+                var strokeColor = 'rgb(0,128,255)', strokeWidth = 3, fillColor = false;
+              } else if (p.urgence & 2) {
+                var strokeColor = 'rgb(255,128,0)', strokeWidth = 3, fillColor = false;
+              } else if (p.urgence & 4) {
+                var strokeColor = 'rgb(255,128,255)', strokeWidth = 3, fillColor = false;
+              } else if (p.urgence & 5) {
+                var strokeColor = 'rgb(128,128,255)', strokeWidth = 3, fillColor = false;
               } else {
-                var strokeColor = 'rgb(0,128,0)', strokeWidth = 1, fillColor = false;
-                if (feature.getGeometry().getRadius() <= 10000) { fillColor = 'rgba(0,128,0,0.1)'; }
+                var strokeColor = 'rgb(255,0,0)', strokeWidth = 3, fillColor = false;
               }
+
+              if (feature.getGeometry().getRadius() <= 10000) {
+                var fillColor = ol.color.asArray(strokeColor);
+                fillColor = fillColor.slice();
+                fillColor[3] = 0.1;
+              }
+
               return new ol.style.Style({
                 stroke: new ol.style.Stroke({
                   color: strokeColor,
@@ -253,6 +291,24 @@ $mysqli->close();
 
         if (features.length > 0) map.getView().fit(vectorSource.getExtent(), map.getSize());
 
+        map.on('click', function(event) {
+          $('#list > li').removeClass('selected');
+          map.forEachFeatureAtPixel(event.pixel, function(feature) {
+            var id = parseInt(feature.getId());
+            $('#message-'+id).addClass('selected');
+          });
+        });
+
+        map.on('moveend', function(evt) {
+          $('#list > li').hide();
+
+          var extent = map.getView().calculateExtent(map.getSize());
+          vectorSource.forEachFeatureIntersectingExtent(extent, function(feature) {
+            var f = feature.getProperties(), id = feature.getId();
+            $('#message-'+id).show();
+          });
+        });
+
         $('select[name=relative]').on('change', function() {
           $(this).parent('form').trigger('submit');
         });
@@ -277,6 +333,7 @@ $mysqli->close();
         $('#list > li').on('click', function() {
           var id = $(this).data('id');
           map.getView().fit(vectorSource.getFeatureById(id).getGeometry().getExtent(), map.getSize());
+          if (map.getView().getZoom() > 19) map.getView().setZoom(19);
         });
 
       });

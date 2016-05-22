@@ -32,6 +32,13 @@
 #list > li:hover {
   background-color: #ddd;
 }
+#list > li.selected {
+  background-color: #808080;
+  color: #fff;
+}
+#list > li.selected .text-muted {
+  color: #fff;
+}
 
 /*body {
 /*  padding-top: 89px;

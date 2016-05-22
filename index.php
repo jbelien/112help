@@ -136,11 +136,11 @@ if (isset($_POST['action'], $_POST['lat'], $_POST['lng']) && $_POST['action'] ==
   <script>
     function init() {
       if ('geolocation' in navigator) {
-        navigator.geolocation.getCurrentPosition(function(position) {
+        navigator.geolocation.watchPosition(function(position) {
           document.getElementById('loading').style.display = 'none';
           document.getElementById('geolocation').style.display = '';
 
-          //console.log(position);
+          console.log(position);
 
           document.getElementById('time').value = position.timestamp;
           document.getElementById('lat').value = Math.round(position.coords.latitude  * 1000000) / 1000000;

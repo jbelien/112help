@@ -1,6 +1,4 @@
 <?php
-header('Content-Type: text/html; charset=utf-8');
-
 $ini = parse_ini_file('settings.ini', TRUE);
 
 switch ($_SERVER['HTTP_HOST']) {
@@ -71,112 +69,90 @@ if (isset($_POST['action'], $_POST['lat'], $_POST['lng']) && $_POST['action'] ==
   $mysqli->query($qsz) or trigger_error($mysqli->error);
 
   $_SESSION['id'] = $mysqli->insert_id;
+  $_SESSION['lng'] = floatval($_POST['lng']);
+  $_SESSION['lat'] = floatval($_POST['lat']);
 
   $mysqli->close();
 
-  header('Location:info.php');
+  header('Location:more.php');
   exit();
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>112 Help</title>
-    <link href="/css/style.css" rel="stylesheet">
-  </head>
-  <body>
-  <div class="container">
-    <h1 id="logo" style="margin-bottom:0;"><?= strtoupper($_SERVER['HTTP_HOST']) ?></h1>
-    <h2 style="color:#ffff00; margin:0;">** PROTOTYPE **</h2>
-    <h1 style="font-size:1.5em;"><?= _('I\'M IN DANGER AND I NEED HELP') ?>*</h1>
-    <p id="error" style="color:#f00; font-weight:bold;"></p>
-    <form id="location" action="/index.php" method="post" autocomplete="off">
-      <input type="hidden" name="batt" id="batt" value="-1" readonly="readonly">
-      <input type="hidden" name="time" id="time" readonly="readonly">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="/css/css-reset.min.css">
+    <link rel="stylesheet" href="/css/front-end-4-picto.css">
+    <title><?= _('112Help') ?></title>
+</head>
+
+<body>
+    <!--Dans le header, le logo, un champ pour avertir que la personne est bien en contact avec le 112 et le bouton annulé-->
+    <div class="container container-header">
+        <header>
+            <!--logo-->
+            <div class="logo">
+                112
+            </div>
+
+            <!--Champ disant qu'on est en contact avec le 112-->
+            <div class="champ-info-112">
+                <?= _('You are in contact with 112 services.') ?>
+            </div>
+        </header>
+    </div>
+    <!--conteneur principal avec les 4 boutons icône représentant le type d'incident-->
+    <div class="container container-main">
+      <form method="post" action="/index.php">
+        <div class="main">
+            <input type="hidden" name="batt" id="batt" value="-1" readonly="readonly">
+            <input type="hidden" name="time" id="time" readonly="readonly">
+            <input type="hidden" name="lat" id="lat" readonly="readonly">
+            <input type="hidden" name="lng" id="lng" readonly="readonly">
+            <input type="hidden" name="acc" id="acc" readonly="readonly">
+
 <?php if (isset($_SESSION['name'])) { ?>
-      <div>
-        <label for="name"><?= _('Name') ?> :</label>
-        <?= (isset($_SESSION['name' ]) ? '<input type="text" name="name" id="name" value="'.htmlentities($_SESSION['name' ]).'" readonly="readonly">'.PHP_EOL : '') ?>
-      </div>
+            <input type="hidden" name="name" id="name" value="<?= htmlentities($_SESSION['name']) ?>" readonly="readonly"><br>
 <?php } ?>
 <?php if (isset($_SESSION['phone'])) { ?>
-      <div>
-        <label for="phone"><?= _('Phone') ?> :</label>
-        <?= (isset($_SESSION['phone']) ? ' <input type="text" name="phone" id="phone" value="'.htmlentities($_SESSION['phone']).'" readonly="readonly">'.PHP_EOL : '') ?>
-      </div>
+            <input type="hidden" name="phone" id="phone" value="<?= htmlentities($_SESSION['phone']) ?>" readonly="readonly"><br>
 <?php } ?>
-      <p id="loading"><?= _('Requesting access / Loading location data...') ?></p>
-      <div id="geolocation" style="display:none;">
-        <div>
-          <label for="lat"><?= _('Latitude') ?> :</label>
-          <input type="text" name="lat" id="lat" readonly="readonly">
-        </div>
-        <div>
-          <label for="lng"><?= _('Longitude') ?> :</label>
-          <input type="text" name="lng" id="lng" readonly="readonly">
-        </div>
-        <div>
-          <label for="acc"><?= _('Accuracy') ?> (m.) :</label>
-          <input type="text" name="acc" id="acc" readonly="readonly">
-        </div>
-        <div>
-          <label><?= _('Address') ?> :</label><br>
-          <address id="addr"></address>
-        </div>
-        <div id="send">
-          <button type="submit" name="action" value="send"><?= _('SEND MY LOCATION') ?></button>
-        </div>
-      </div>
-    </form>
-    <p class="legal">* <?= _('Irresponsible use of this emergency service is punishable under federal law.') ?></p>
-  </div>
-  <script>
-    function init() {
-      if ('geolocation' in navigator) {
-        navigator.geolocation.watchPosition(function(position) {
-          document.getElementById('loading').style.display = 'none';
-          document.getElementById('geolocation').style.display = '';
 
-          console.log(position);
+            <button type="submit" name="action" value="send" id="btn-send" disabled="disabled"><?= _('Send my location') ?></button>
+          <p class="legal"><?= _('Irresponsible use of this emergency service is punishable under federal law.') ?></p>
+        </div>
+      </form>
+    </div>
+    <!--Le footer apparaît après que l'on ait cliqué sur un des boutons-->
+    <div class="container container-footer">
+        <footer>
+            <!--Champ prévenant que l'on géolocalise ou que l'on a pas réussi à géolocaliser ou qui affiche l'adresse obtenu après géolocalisation-->
+            <div class="btn-edit-address">
+                <div class="icon-geolocation"></div>
+            </div>
+            <div class="info-geolocalisation">
+                <?= _('We are locating you') ?><br><span><?= _('Please wait ...') ?></span>
+            </div>
+        </footer>
+    </div>
+    <div class="modal-container">
+        <div class="modal-inner">
+            <div class="description">
+                <!--<?= _('Voulez-vous annuler l\'alerte') ?>-->
+            </div>
+            <!--
+            <div class="btn-action-container">
+                <button class="up-action"><?= _('Oui') ?></button>
+                <button class="down-action"><?= _('Non') ?></button>
+            </div>
+            -->
+        </div>
+    </div>
+    <script src="/index.js"></script>
+</body>
 
-          document.getElementById('time').value = position.timestamp;
-          document.getElementById('lat').value = Math.round(position.coords.latitude  * 1000000) / 1000000;
-          document.getElementById('lng').value = Math.round(position.coords.longitude * 1000000) / 1000000;
-          document.getElementById('acc').value = Math.round(position.coords.accuracy * 10) / 10;
-
-          var geocoder = new google.maps.Geocoder;
-          geocoder.geocode({'location': {lat: position.coords.latitude, lng: position.coords.longitude} }, function(results, status) {
-            //console.log(results, status);
-            if (status === google.maps.GeocoderStatus.OK) {
-              document.getElementById('addr').innerText = results[0].formatted_address;
-            }
-          });
-        },
-        function(error) {
-          document.getElementById('loading').remove();
-          document.getElementById('error').innerText = error.message;
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 10*1000,
-          maximumAge: 5*60*1000
-        });
-      } else {
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('error').innerText = 'Le service de géolocalisation n\'est pas disponible sur votre ordinateur.';
-      }
-
-      if ('battery' in navigator) {
-        navigator.getBattery().then(function(battery) {
-          //console.log(battery);
-          document.getElementById('batt').value = battery.level;
-        });
-      }
-    }
-  </script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_p27IkNE2nxfTCtuf5oxyGUsmz4R7i34&amp;language=<?= $lang ?>&amp;callback=init" async defer></script>
-  </body>
 </html>

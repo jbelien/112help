@@ -39,15 +39,15 @@ $(document).ready(function() {
   });
 
   map.on('click', function(event) {
-    $('#list > li').removeClass('selected');
+    $('#list .alert112').removeClass('active');
     map.forEachFeatureAtPixel(event.pixel, function(feature) {
       var id = parseInt(feature.getId());
-      $('#message-'+id).addClass('selected');
+      $('#message-'+id).addClass('active');
     });
   });
 
   map.on('moveend', function(evt) {
-    $('#list > li').hide();
+    $('#list .alert112').hide();
     var extent = map.getView().calculateExtent(map.getSize());
     vectorSource.forEachFeatureIntersectingExtent(extent, function(feature) {
       var f = feature.getProperties(), id = feature.getId();
@@ -78,28 +78,47 @@ $(document).ready(function() {
     }
   });
 
-  $('#list > li').on('click', function() {
-    var id = $(this).data('id');
-    map.getView().fit(vectorSource.getFeatureById(id).getGeometry().getExtent(), map.getSize());
-    if (map.getView().getZoom() > 19) map.getView().setZoom(19);
-  });
+  window.setInterval(function() { loadFunction(false); }, 60000);
+});
 
-  window.setInterval(function() { loadFunction(false); }, 10000);
+$(document).on('click', '.alert112', function() {
+  var id = $(this).data('id');
+  map.getView().fit(vectorSource.getFeatureById(id).getGeometry().getExtent(), map.getSize(), { maxZoom: 19 });
 });
 
 var loadFunction = function(fit) {
-  vectorSource.clear(); circleSource.clear();
+  vectorSource.clear(); circleSource.clear(); $('#list').empty();
 
   $.get('json.php', { relative: relative }, function(data) {
+    var d = new Date();
+    $('.navbar-text > time').attr('datetime', d.toString()).text(d.toLocaleString());
+
     var features = (new ol.format.GeoJSON()).readFeatures(data, { featureProjection: 'EPSG:3857' }); vectorSource.addFeatures(features);
 
     if (features.length > 0) {
       for (var i = 0; i < features.length; i++) {
         var p = features[i].getProperties(), c = features[i].getGeometry().getCoordinates();
-        var circle = new ol.Feature({ id: p.id, indanger: p.indanger, urgence: p.urgence, geometry: new ol.geom.Circle(c, parseFloat(p.accuracy)) }); circleSource.addFeature(circle);
+
+        if (p.accuracy != -1) {
+          var circle = new ol.Feature({ id: p.id, indanger: p.indanger, urgence: p.urgence, geometry: new ol.geom.Circle(c, parseFloat(p.accuracy)) }); circleSource.addFeature(circle);
+        }
+
+        if (p.urgence & 1) { var img = document.createElement('img'); $(img).attr({ src: '../img/admin/fire.svg', height: '50px' }) }
+        else if (p.urgence & 2) { var img = document.createElement('img'); $(img).attr({ src: '../img/admin/route.svg', height: '50px' }) }
+        else if (p.urgence & 4) { var img = document.createElement('img'); $(img).attr({ src: '../img/admin/health.svg', height: '50px' }) }
+        else if (p.urgence & 8) { var img = document.createElement('img'); $(img).attr({ src: '../img/admin/violence.svg', height: '50px' }) }
+
+        var div = $('#infos').clone().show().attr({ id: 'message-'+p.id }).data({ id: p.id }); if (p.indanger == 0) { div.addClass('dismiss'); }
+        div.find('.icone').append(img);
+        div.find('address').text(p.address);
+        div.find('.heure').attr({ title: p.datetime });
+        div.find('.heure > time').text(p.ago).attr({ datetime: p.datetime });
+        div.find('.distance > span').text((p.accuracy == -1 ? 'manual' : p.accuracy+'m.'));
+        div.find('.batterie > span').text((p.battery != null ? p.battery+'%' : ''));
+        $('#list').append(div);
       }
 
-      if (fit === true) map.getView().fit(circleSource.getExtent(), map.getSize());
+      if (fit === true) map.getView().fit(circleSource.getExtent(), map.getSize(), { maxZoom: 15 });
     }
   });
 }
@@ -108,11 +127,11 @@ var styleFunction = function(feature) {
   var p = feature.getProperties();
 
   if (p.indanger == 0) { var fillColor = 'rgba(0,128,0,0.3)'; }
-  else if (p.urgence & 1) { var fillColor = 'rgb(0,128,255)'; }
-  else if (p.urgence & 2) { var fillColor = 'rgb(255,128,0)'; }
-  else if (p.urgence & 4) { var fillColor = 'rgb(255,128,255)'; }
-  else if (p.urgence & 8) { var fillColor = 'rgb(128,0,255)'; }
-  else { var fillColor = 'rgb(255,0,0)'; }
+  else if (p.urgence & 1) { var fillColor = '#ED1F24'; }
+  else if (p.urgence & 2) { var fillColor = '#01A64F'; }
+  else if (p.urgence & 4) { var fillColor = '#1CBBB4'; }
+  else if (p.urgence & 8) { var fillColor = '#979797'; }
+  else { var fillColor = '#808080'; }
 
   return new ol.style.Style({
     image: new ol.style.Circle({
@@ -127,13 +146,13 @@ var styleCircleFunction = function(feature) {
   var p = feature.getProperties();
 
   if (p.indanger == 0) { var strokeColor = 'rgba(0,128,0,0.3)', strokeWidth = 1, fillColor = false; }
-  else if (p.urgence & 1) { var strokeColor = 'rgb(0,128,255)', strokeWidth = 3, fillColor = false; }
-  else if (p.urgence & 2) { var strokeColor = 'rgb(255,128,0)', strokeWidth = 3, fillColor = false; }
-  else if (p.urgence & 4) { var strokeColor = 'rgb(255,128,255)', strokeWidth = 3, fillColor = false; }
-  else if (p.urgence & 5) { var strokeColor = 'rgb(128,128,255)', strokeWidth = 3, fillColor = false; }
-  else { var strokeColor = 'rgb(255,0,0)', strokeWidth = 3, fillColor = false; }
+  else if (p.urgence & 1) { var strokeColor = '#ED1F24', strokeWidth = 1, fillColor = false; }
+  else if (p.urgence & 2) { var strokeColor = '#01A64F', strokeWidth = 1, fillColor = false; }
+  else if (p.urgence & 4) { var strokeColor = '#1CBBB4', strokeWidth = 1, fillColor = false; }
+  else if (p.urgence & 5) { var strokeColor = '#979797', strokeWidth = 1, fillColor = false; }
+  else { var strokeColor = '#808080', strokeWidth = 1, fillColor = false; }
 
-  if (feature.getGeometry().getRadius() <= 10000) {
+  if (feature.getGeometry().getRadius() <= 1000) {
     var fillColor = ol.color.asArray(strokeColor);
     fillColor = fillColor.slice();
     fillColor[3] = 0.1;

@@ -33,6 +33,26 @@ body {
     overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
     padding: 0;
 }
+
+#map-addons {
+  position: absolute;
+  right: 5px;
+  z-index: 999;
+  width: 25%;
+  min-width: 200px;
+  max-height: 100%;
+  overflow-y: hidden;
+}
+#map-baselayers,
+#map-hide {
+  padding: 5px;
+  margin: 0;
+  margin-top: 5px;
+  color: #888;
+  background-color: rgba(255,255,255,0.9);
+  border-color: #888;
+  border-width: 2px;
+}
 .ol-attribution.ol-logo-only,
 .ol-attribution.ol-uncollapsible {
     max-width: calc(100% - 3em);
@@ -62,8 +82,8 @@ body {
     }
 }
 .alert112 {
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     margin-bottom:10px;
     border-bottom: 1px dotted #979797;
 }

@@ -12,7 +12,7 @@ session_start(); if (!isset($_SESSION['user'])) { echo json_encode($json); exit(
 $mysqli = new MySQLi($ini['mysql']['host'], $ini['mysql']['username'], $ini['mysql']['passwd'], $ini['mysql']['dbname'], $ini['mysql']['port']);
 $mysqli->set_charset('utf8');
 
-$qsz  = "SELECT `id`, `indanger`, `urgence`, `accuracy`, `address`, `datetime`, `battery`, X(`position`) AS `lng`, Y(`position`) AS `lat` FROM `help`";
+$qsz  = "SELECT `id`, `indanger`, `urgence`, `accuracy`, `address`, `datetime`, `battery`, `name`, `phone`, `infos`, X(`position`) AS `lng`, Y(`position`) AS `lat` FROM `help`";
 if (isset($_REQUEST['relative']) && $_REQUEST['relative'] > 0) { $qsz .= " WHERE `datetime` >= '".date('Y-m-d H:i:s', time()-intval($_REQUEST['relative']))."'"; }
 $qsz .= " ORDER BY `datetime` DESC";
 
@@ -23,7 +23,7 @@ while ($r = $q->fetch_assoc()) {
     curl_setopt($ch, CURLOPT_URL, 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$r['lat'].','.$r['lng'].'&sensor=false');
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    $json = curl_exec($ch); $addr = json_decode($json);
+    $_json = curl_exec($ch); $addr = json_decode($_json);
     curl_close($ch);
 
     if ($addr->status == 'OK') {

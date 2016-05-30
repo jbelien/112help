@@ -6,9 +6,9 @@ session_start(); if (!isset($_SESSION['user'])) { header('Location:login.php'); 
 $mysqli = new MySQLi($ini['mysql']['host'], $ini['mysql']['username'], $ini['mysql']['passwd'], $ini['mysql']['dbname'], $ini['mysql']['port']);
 $mysqli->set_charset('utf8');
 
-$relative = 604800; if (isset($_GET['relative'])) $relative = intval($_GET['relative']);
+$relative = 86400; if (isset($_GET['relative'])) $relative = intval($_GET['relative']);
 
-$messages = array(); $count1 = 0; $count2 = 0; $count4 = 0; $count8 = 0;
+$messages = array(); $count = 0; $count1 = 0; $count2 = 0; $count4 = 0; $count8 = 0;
 
 $qsz  = "SELECT `id`, `urgence` FROM `help`"; if ($relative > 0) $qsz .= " WHERE `datetime` >= '".date('Y-m-d H:i:s', time()-$relative)."'";
 
@@ -18,6 +18,7 @@ while ($r = $q->fetch_assoc()) {
   if ($r['urgence'] & 2) $count2++;
   if ($r['urgence'] & 4) $count4++;
   if ($r['urgence'] & 8) $count8++;
+  $count++;
 }
 $q->free();
 
@@ -74,6 +75,12 @@ $mysqli->close();
           </form>
           <ul class="nav navbar-nav navbar-right">
               <li class="badge-112">
+                  <a href="?relative=<?= $relative ?>">
+                      ALL
+                      <span class="badge"><?= $count ?></span>
+                  </a>
+              </li>
+              <li class="badge-112">
                   <a href="?relative=<?= $relative ?>&amp;type=1">
                       <img src="../img/admin/fire.svg" alt="" height="50px">
                       <span class="badge"><?= $count1 ?></span>
@@ -105,22 +112,52 @@ $mysqli->close();
 
     <div class="container-fluid">
       <div class="row">
-        <div class="col-sm-9 main" id="map">
+        <div class="col-sm-8 main" id="map">
+          <div id="map-addons">
+          <div id="map-baselayers" class="alert">
+            <label style="margin-bottom:0;">Baselayer :</label>
+            <select name="baselayer">
+              <optgroup label="<?= _('World') ?>">
+                <option value="mapquest" selected="selected">OpenStreetMap</option>
+                <option value="bing">Bing Maps</option>
+                <option value="bing_p">Bing Maps (<?= _('Aerial') ?>)</option>
+              </optgroup>
+              <optgroup label="<?= _('Belgium') ?>">
+                <option value="cirb">Bruxelles / Brussel</option>
+                <option value="cirb_p">Bruxelles / Brussel (<?= _('Aerial') ?>)</option>
+                <option value="agiv">Vlaanderen</option>
+                <option value="agiv_p">Vlaanderen (<?= _('Aerial') ?>)</option>
+                <option value="spw">Wallonie</option>
+                <option value="spw_p">Wallonie (<?= _('Aerial') ?>)</option>
+              </optgroup>
+            </select>
+          </div>
+          <div id="map-hide" class="alert">
+            <label><?= _('Show messages on map') ?> :</label>
+            <div class="btn-group btn-group-justified" data-toggle="buttons">
+              <label class="btn btn-default btn-sm active">
+                <input type="radio" name="show" value="1" id="show1" autocomplete="off" checked="checked"> <?= _('Show') ?>
+              </label>
+              <label class="btn btn-default btn-sm">
+                <input type="radio" name="show" value="0" id="show0" autocomplete="off"> <?= _('Hide') ?>
+              </label>
+            </div>
+          </div>
         </div>
-        <div class="col-sm-3 col-sm-offset-9 sidebar" id="list">
+        <div class="col-sm-4 col-sm-offset-8 sidebar" id="list">
         </div>
       </div>
     </div>
 
-    <div id="infos" class="alert112" style="display: none;">
+    <div id="message" class="alert112" style="display: none;">
         <div class="row">
             <div class="icone col-sm-2">
             </div>
             <div class="col-sm-7">
-                <address></address>
+                <address style="margin-bottom: 5px;"></address>
             </div>
             <div class="col-sm-3">
-                <button class="btn btn-xs" data-toggle="modal" data-target="#myModal">Details</button>
+                <button class="btn btn-default btn-xs" data-toggle="modal">Details</button>
             </div>
         </div>
         <div class="row">
@@ -128,6 +165,23 @@ $mysqli->close();
             <div class="distance col-sm-3"><img src="../img/admin/info.svg" alt="" height="25px"> <span></span></div>
             <div class="batterie col-sm-3"><img src="../img/admin/batt.svg" alt="" height="25px"> <span></span></div>
             <div class="message col-sm-3"><img src="../img/admin/messagerie.svg" alt="" height="25px"> <span></span></div>
+        </div>
+    </div>
+    <div class="modal fade" id="message-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Incident details</h4>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                </div>
+            </div>
         </div>
     </div>
 

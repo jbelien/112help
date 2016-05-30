@@ -127,7 +127,7 @@ if (isset($_REQUEST['new-lat'], $_REQUEST['new-lng'])) {
             <div class="icon"></div>
             <div class="champ-adresse">
                 <div class="adresse">
-                    <input type="text" name="address" id="address">
+                    <input type="text" name="address" id="adresse">
                 </div>
             </div>
             <!--

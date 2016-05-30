@@ -22,7 +22,7 @@ function initMap() {
             console.log(event.latLng.toString(), results, status);
 
             if (status === google.maps.GeocoderStatus.OK) {
-                document.getElementById('address').value = results[0].formatted_address;
+                document.getElementById('adresse').value = results[0].formatted_address;
                 document.getElementById('lat').value = results[0].geometry.location.lat();
                 document.getElementById('lng').value = results[0].geometry.location.lng();
             }
@@ -33,7 +33,7 @@ function initMap() {
         marker = new google.maps.Marker({ map: map, position: position });
     }
 
-    autoComplete = new google.maps.places.Autocomplete(document.getElementById('address'), {
+    autoComplete = new google.maps.places.Autocomplete(document.getElementById('adresse'), {
         types: ['geocode'],
         componentRestrictions: { country: 'be' }
     });

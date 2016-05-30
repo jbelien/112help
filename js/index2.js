@@ -10,12 +10,16 @@ var init = function() {
   document.getElementsByClassName('btn-reseaux-sociaux')[0].onclick = function() {
     document.body.classList.add('message');
   };
+  document.getElementsByClassName('back')[0].onclick = function() {
+    document.body.classList.remove('message');
+  };
   document.getElementsByClassName('annulation-alert')[0].onclick = function() {
     document.getElementsByClassName('modal-container')[0].classList.add('active');
   };
   document.getElementsByClassName('up-action')[0].onclick = function(event) {
     event.preventDefault();
     document.location.href = '/index.php?clear';
+    //window.close();
   };
   document.getElementsByClassName('down-action')[0].onclick = function(event) {
     event.preventDefault();

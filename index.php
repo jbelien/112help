@@ -106,6 +106,8 @@ else if (isset($_REQUEST['action'], $_REQUEST['whatsapp']) && $_REQUEST['action'
     $qsz  = "UPDATE `help` SET `social` = '".$mysqli->real_escape_string('whatsapp:'.$_REQUEST['whatsapp'])."' WHERE `id` = ".intval($_SESSION['id'])." LIMIT 1";
     $mysqli->query($qsz) or trigger_error($mysqli->error);
     $mysqli->close();
+
+    $close = TRUE;
 }
 else if (isset($_REQUEST['action'], $_REQUEST['messenger']) && $_REQUEST['action'] == 'send-messenger') {
     $mysqli = new MySQLi($ini['mysql']['host'], $ini['mysql']['username'], $ini['mysql']['passwd'], $ini['mysql']['dbname'], $ini['mysql']['port']);
@@ -113,6 +115,8 @@ else if (isset($_REQUEST['action'], $_REQUEST['messenger']) && $_REQUEST['action
     $qsz  = "UPDATE `help` SET `social` = '".$mysqli->real_escape_string('messenger:'.$_REQUEST['messenger'])."' WHERE `id` = ".intval($_SESSION['id'])." LIMIT 1";
     $mysqli->query($qsz) or trigger_error($mysqli->error);
     $mysqli->close();
+
+    $close = TRUE;
 }
 else if (isset($_REQUEST['action'], $_REQUEST['viber']) && $_REQUEST['action'] == 'send-viber') {
     $mysqli = new MySQLi($ini['mysql']['host'], $ini['mysql']['username'], $ini['mysql']['passwd'], $ini['mysql']['dbname'], $ini['mysql']['port']);
@@ -120,6 +124,8 @@ else if (isset($_REQUEST['action'], $_REQUEST['viber']) && $_REQUEST['action'] =
     $qsz  = "UPDATE `help` SET `social` = '".$mysqli->real_escape_string('viber:'.$_REQUEST['viber'])."' WHERE `id` = ".intval($_SESSION['id'])." LIMIT 1";
     $mysqli->query($qsz) or trigger_error($mysqli->error);
     $mysqli->close();
+
+    $close = TRUE;
 }
 else if (isset($_REQUEST['action'], $_REQUEST['infos']) && $_REQUEST['action'] == 'send-infos') {
     $mysqli = new MySQLi($ini['mysql']['host'], $ini['mysql']['username'], $ini['mysql']['passwd'], $ini['mysql']['dbname'], $ini['mysql']['port']);
@@ -127,6 +133,8 @@ else if (isset($_REQUEST['action'], $_REQUEST['infos']) && $_REQUEST['action'] =
     $qsz  = "UPDATE `help` SET `infos` = '".$mysqli->real_escape_string($_REQUEST['infos'])."' WHERE `id` = ".intval($_SESSION['id'])." LIMIT 1";
     $mysqli->query($qsz) or trigger_error($mysqli->error);
     $mysqli->close();
+
+    $close = TRUE;
 }
 ?>
 <!DOCTYPE html>
@@ -270,6 +278,9 @@ else if (isset($_REQUEST['action'], $_REQUEST['infos']) && $_REQUEST['action'] =
 
     <!--Container pour le formulaire des choix des réseaux sociaux-->
     <div class="container container-reseaux-sociaux">
+        <div class="back">
+            <div class="arrow"></div>
+        </div>
         <form action="/index.php" method="post" class="reseaux-sociaux">
             <div class="reseau-social whatsapp">
                 <div class="icon whatsapp"></div>
@@ -295,7 +306,7 @@ else if (isset($_REQUEST['action'], $_REQUEST['infos']) && $_REQUEST['action'] =
                 </div>
                 <button class="send" name="action" value="send-viber"></button>
             </div>
-            <div class="message-direct">
+            <div class="reseau-social message-direct">
                 <div class="icon btn-112">112</div>
                 <div class="form-container">
                     <h3>Envoyer un message direct</h3>
@@ -319,6 +330,30 @@ else if (isset($_REQUEST['action'], $_REQUEST['infos']) && $_REQUEST['action'] =
         </div>
     </div>
 
+    <div class="modal-container confirmation-appel<?= (isset($close) && $close === TRUE ? ' active' : '') ?>">
+        <div class="modal-inner">
+            <div class="description">
+                Nous avons bien pris en compte vos données, nous vous contactons dans les plus brefs délais
+            </div>
+            <!--
+            <div class="btn-wrapper">
+                <button onclick="window.close();">Fermer</button>
+            </div>
+            -->
+        </div>
+    </div>
+    <div class="modal-container confirmation-appel<?= (isset($_GET['clear']) ? ' active' : '') ?>">
+        <div class="modal-inner">
+            <div class="description">
+                Appel bien terminé.
+            </div>
+            <!--
+            <div class="btn-wrapper">
+                <button onclick="window.close();">Fermer</button>
+            </div>
+            -->
+        </div>
+    </div>
 <?php
 if (isset($_SESSION['id'], $_SESSION['lng'], $_SESSION['lat'])) {
 ?>
@@ -328,7 +363,7 @@ if (isset($_SESSION['id'], $_SESSION['lng'], $_SESSION['lat'])) {
     <script src="/js/index2.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_p27IkNE2nxfTCtuf5oxyGUsmz4R7i34&amp;language=<?= $lang ?>&amp;callback=init" async defer></script>
 <?php
-} else {
+} else if (!isset($_GET['clear'])) {
 ?>
     <script src="/js/index.js"></script>
 <?php

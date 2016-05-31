@@ -90,13 +90,14 @@ $(document).on('click', '.alert112', function() {
     map.getView().fit(vectorSource.getFeatureById(id).getGeometry().getExtent(), map.getSize(), { maxZoom: 19 });
   }
 });
-$(document).on('click', 'button[data-toggle="modal"]', function() {
+$(document).on('click', 'button[data-toggle="modal"]', function(event) {
+  event.stopPropagation();
   var modal = $(this).data('target');
   $(modal).modal('show');
 });
 
 var loadFunction = function(fit) {
-  $.get('json.php', { relative: relative }, function(data) {
+  $.get('json.php', { relative: relative, type: type, '_': Date.now() }, function(data) {
     vectorSource.clear(); circleSource.clear(); $('#list').empty();
 
     var d = new Date();
@@ -108,7 +109,7 @@ var loadFunction = function(fit) {
       for (var i = 0; i < features.length; i++) {
         var p = features[i].getProperties(), c = features[i].getGeometry().getCoordinates();
 
-        if (p.accuracy != -1) {
+        if (p.accuracy > 0) {
           var circle = new ol.Feature({ indanger: p.indanger, urgence: p.urgence, geometry: new ol.geom.Circle(c, parseFloat(p.accuracy)) });
           circle.setId(p.id);
           circleSource.addFeature(circle);
@@ -120,23 +121,34 @@ var loadFunction = function(fit) {
         else if (p.urgence & 8) { var img = document.createElement('img'); $(img).attr({ src: '../img/admin/violence.svg', height: '50px' }) }
 
         var div = $('#message').clone().show().attr({ id: 'message-'+p.id }).data({ id: p.id }); if (p.indanger == 0) { div.addClass('dismiss'); }
-        if (p.name != null || p.phone != null) $(div).prepend('<strong class="text-info">'+p.name+' - '+p.phone+'</strong>');
+        if (p.name != null || p.phone != null) $(div).prepend('<div class="text-info text-center"><strong>'+p.name+' - '+p.phone+'</strong></div>');
         $(div).find('.icone').append(img);
-        $(div).find('address').text(p.address);
-        $(div).find('.heure').attr({ title: p.datetime });
-        $(div).find('.heure > time').text(p.ago).attr({ datetime: p.datetime });
-        $(div).find('.distance > span').text((p.accuracy == -1 ? 'manual' : p.accuracy+'m.'));
-        if (p.battery == null) { $(div).find('.batterie').hide(); } else { $(div).find('.batterie > span').text(p.battery+'%'); }
+        $(div).find('address').html((p.accuracy < 1000 ? p.address : '<i class="text-muted">Not enough precision to display address.</i>'));
+        $(div).find('.heure').text(p.ago).attr({ title: p.datetime, datetime: p.datetime });
+        $(div).find('.distance').text((p.accuracy == -1 ? 'manual' : p.accuracy+'m.'));
+        if (p.battery == null) { $(div).find('.batterie').hide(); } else { $(div).find('.batterie').text(p.battery+'%'); }
+        if (p.infos == null && p.social == null) { $(div).find('.social').hide(); }
         $(div).find('button[data-toggle="modal"]').data('target', '#message-modal-'+p.id);
 
         $('#list').append(div);
 
         var div = $('#message-modal').clone().attr({ id: 'message-modal-'+p.id }).data({ id: p.id }).appendTo('body');
+        if (p.name == null) { $(div).find('tr.infos-name').hide(); } else { $(div).find('tr.infos-name > td').text(p.name); }
+        if (p.phone == null) { $(div).find('tr.infos-phone').hide(); } else { $(div).find('tr.infos-phone > td').text(p.phone); }
+        $(div).find('tr.infos-time > td').text(p.datetime);
+        $(div).find('tr.infos-address > td').html((p.accuracy < 1000 ? p.address : '<i class="text-muted">Not enough precision to display address.</i>'));
+        $(div).find('tr.infos-accuracy > td').text((p.accuracy == -1 ? 'manual' : p.accuracy+' m.'));
+        $(div).find('tr.infos-battery > td').text((p.battery != null ? p.battery+'%' : '-'));
+        $(div).find('tr.infos-ip > td').text(p.ip+' ['+p.netname+']');
+        $(div).find('tr.infos-infos > td').text((p.infos != null ? p.infos : '-'));
+        $(div).find('tr.infos-social > td').text((p.social != null ? p.social : '-'));
 
         if (!ol.extent.containsExtent(map.getView().calculateExtent(map.getSize()), features[i].getGeometry().getExtent())) { div.hide(); }
       }
 
-      if (fit === true) map.getView().fit(circleSource.getExtent(), map.getSize(), { maxZoom: 19 });
+      var extent = ol.extent.extend(circleSource.getExtent(), vectorSource.getExtent());
+
+      if (fit === true) { map.getView().fit(extent, map.getSize(), { maxZoom: 16 }); }
     }
   });
 }

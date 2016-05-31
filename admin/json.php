@@ -12,8 +12,9 @@ session_start(); if (!isset($_SESSION['user'])) { echo json_encode($json); exit(
 $mysqli = new MySQLi($ini['mysql']['host'], $ini['mysql']['username'], $ini['mysql']['passwd'], $ini['mysql']['dbname'], $ini['mysql']['port']);
 $mysqli->set_charset('utf8');
 
-$qsz  = "SELECT `id`, `indanger`, `urgence`, `accuracy`, `address`, `datetime`, `battery`, `name`, `phone`, `infos`, X(`position`) AS `lng`, Y(`position`) AS `lat` FROM `help`";
+$qsz  = "SELECT `id`, `indanger`, `urgence`, `accuracy`, `address`, `datetime`, `battery`, `name`, `phone`, `infos`, `social`, `ip`, `ip_forwarded`, `whois`, X(`position`) AS `lng`, Y(`position`) AS `lat` FROM `help`";
 if (isset($_REQUEST['relative']) && $_REQUEST['relative'] > 0) { $qsz .= " WHERE `datetime` >= '".date('Y-m-d H:i:s', time()-intval($_REQUEST['relative']))."'"; }
+if (isset($_REQUEST['type']) && $_REQUEST['type'] > 0) { $qsz .= " AND `urgence` & ".intval($_REQUEST['type'])." = ".intval($_REQUEST['type']); }
 $qsz .= " ORDER BY `datetime` DESC";
 
 $q = $mysqli->query($qsz) or trigger_error($mysqli->error);
@@ -49,6 +50,8 @@ while ($r = $q->fetch_assoc()) {
   else if ($interval->h > 0) $r['ago'] = sprintf(_('%dh ago'), $interval->h);
   else if ($interval->i > 0) $r['ago'] = sprintf(_('%dm ago'), $interval->i);
   else if ($interval->s > 0) $r['ago'] = sprintf(_('%ds ago'), $interval->s);
+
+  if (preg_match('/^netname: *(.*)$/im', $r['whois'], $matches) == 1) $r['netname'] = $matches[1];
 
   $feature = array(
     'type' => 'Feature',

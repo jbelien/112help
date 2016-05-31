@@ -7,6 +7,7 @@ $mysqli = new MySQLi($ini['mysql']['host'], $ini['mysql']['username'], $ini['mys
 $mysqli->set_charset('utf8');
 
 $relative = 86400; if (isset($_GET['relative'])) $relative = intval($_GET['relative']);
+$type = 0; if (isset($_GET['type'])) $type = intval($_GET['type']);
 
 $messages = array(); $count = 0; $count1 = 0; $count2 = 0; $count4 = 0; $count8 = 0;
 
@@ -67,16 +68,16 @@ $mysqli->close();
             </select>
 
             <div class="input-group">
-              <input type="text" class="form-control input-lg" placeholder="Municipality">
+              <input type="text" class="form-control input-lg" placeholder="Municipality" disabled="disabled">
               <span class="input-group-btn">
-                <button class="btn btn-default btn-lg" type="button">OK</button>
+                <button class="btn btn-default btn-lg" type="button" disabled="disabled">OK</button>
               </span>
             </div>
           </form>
           <ul class="nav navbar-nav navbar-right">
               <li class="badge-112">
                   <a href="?relative=<?= $relative ?>">
-                      ALL
+                      <img src="../img/admin/all.svg" alt="" height="38px" style="margin: 6px 0;">
                       <span class="badge"><?= $count ?></span>
                   </a>
               </li>
@@ -87,7 +88,7 @@ $mysqli->close();
                   </a>
               </li>
               <li class="badge-112">
-                  <a href="?relative=<?= $relative ?>&amp;type=/">
+                  <a href="?relative=<?= $relative ?>&amp;type=8">
                       <img src="../img/admin/violence.svg" alt="" height="50px">
                       <span class="badge"><?= $count8 ?></span>
                   </a>
@@ -114,33 +115,34 @@ $mysqli->close();
       <div class="row">
         <div class="col-sm-8 main" id="map">
           <div id="map-addons">
-          <div id="map-baselayers" class="alert">
-            <label style="margin-bottom:0;">Baselayer :</label>
-            <select name="baselayer">
-              <optgroup label="<?= _('World') ?>">
-                <option value="mapquest" selected="selected">OpenStreetMap</option>
-                <option value="bing">Bing Maps</option>
-                <option value="bing_p">Bing Maps (<?= _('Aerial') ?>)</option>
-              </optgroup>
-              <optgroup label="<?= _('Belgium') ?>">
-                <option value="cirb">Bruxelles / Brussel</option>
-                <option value="cirb_p">Bruxelles / Brussel (<?= _('Aerial') ?>)</option>
-                <option value="agiv">Vlaanderen</option>
-                <option value="agiv_p">Vlaanderen (<?= _('Aerial') ?>)</option>
-                <option value="spw">Wallonie</option>
-                <option value="spw_p">Wallonie (<?= _('Aerial') ?>)</option>
-              </optgroup>
-            </select>
-          </div>
-          <div id="map-hide" class="alert">
-            <label><?= _('Show messages on map') ?> :</label>
-            <div class="btn-group btn-group-justified" data-toggle="buttons">
-              <label class="btn btn-default btn-sm active">
-                <input type="radio" name="show" value="1" id="show1" autocomplete="off" checked="checked"> <?= _('Show') ?>
-              </label>
-              <label class="btn btn-default btn-sm">
-                <input type="radio" name="show" value="0" id="show0" autocomplete="off"> <?= _('Hide') ?>
-              </label>
+            <div id="map-baselayers" class="alert">
+              <label>Baselayer :</label>
+              <select class="form-control input-sm" name="baselayer">
+                <optgroup label="<?= _('World') ?>">
+                  <option value="mapquest" selected="selected">OpenStreetMap</option>
+                  <option value="bing">Bing Maps</option>
+                  <option value="bing_p">Bing Maps (<?= _('Aerial') ?>)</option>
+                </optgroup>
+                <optgroup label="<?= _('Belgium') ?>">
+                  <option value="cirb">Bruxelles / Brussel</option>
+                  <option value="cirb_p">Bruxelles / Brussel (<?= _('Aerial') ?>)</option>
+                  <option value="agiv">Vlaanderen</option>
+                  <option value="agiv_p">Vlaanderen (<?= _('Aerial') ?>)</option>
+                  <option value="spw">Wallonie</option>
+                  <option value="spw_p">Wallonie (<?= _('Aerial') ?>)</option>
+                </optgroup>
+              </select>
+            </div>
+            <div id="map-hide" class="alert">
+              <label><?= _('Show messages on map') ?> :</label>
+              <div class="btn-group btn-group-justified" data-toggle="buttons">
+                <label class="btn btn-default btn-sm active">
+                  <input type="radio" name="show" value="1" id="show1" autocomplete="off" checked="checked"> <?= _('Show') ?>
+                </label>
+                <label class="btn btn-default btn-sm">
+                  <input type="radio" name="show" value="0" id="show0" autocomplete="off"> <?= _('Hide') ?>
+                </label>
+              </div>
             </div>
           </div>
         </div>
@@ -151,20 +153,19 @@ $mysqli->close();
 
     <div id="message" class="alert112" style="display: none;">
         <div class="row">
-            <div class="icone col-sm-2">
+            <div class="col-sm-2 text-center icone"></div>
+            <div class="col-sm-10">
+              <div class="row">
+                <div class="col-sm-9"><address style="margin-bottom: 5px;"></address></div>
+                <div class="col-sm-3"><button class="btn btn-default btn-block btn-xs" data-toggle="modal">Details</button></div>
+              </div>
+              <div class="row">
+                <div class="col-sm-3"><time class="heure"></time></div>
+                <div class="col-sm-3"><span class="distance"></span></div>
+                <div class="col-sm-3"><span class="batterie"></span></div>
+                <div class="col-sm-3"><span class="social">YES</span></div>
+              </div>
             </div>
-            <div class="col-sm-7">
-                <address style="margin-bottom: 5px;"></address>
-            </div>
-            <div class="col-sm-3">
-                <button class="btn btn-default btn-xs" data-toggle="modal">Details</button>
-            </div>
-        </div>
-        <div class="row">
-            <div class="heure col-sm-3"><img src="../img/admin/time.svg" alt="" height="25px"> <time></time></div>
-            <div class="distance col-sm-3"><img src="../img/admin/info.svg" alt="" height="25px"> <span></span></div>
-            <div class="batterie col-sm-3"><img src="../img/admin/batt.svg" alt="" height="25px"> <span></span></div>
-            <div class="message col-sm-3"><img src="../img/admin/messagerie.svg" alt="" height="25px"> <span></span></div>
         </div>
     </div>
     <div class="modal fade" id="message-modal" tabindex="-1" role="dialog">
@@ -177,9 +178,17 @@ $mysqli->close();
                     <h4 class="modal-title">Incident details</h4>
                 </div>
                 <div class="modal-body">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                  <table class="table table-condensed table-bordered" style="margin-bottom:0;">
+                    <tr class="infos-time"><th>Time</th><td></td></tr>
+                    <tr class="infos-name"><th>Name</th><td></td></tr>
+                    <tr class="infos-phone"><th>Phone</th><td></td></tr>
+                    <tr class="infos-address"><th>Address</th><td></td></tr>
+                    <tr class="infos-accuracy"><th>Accuracy</th><td></td></tr>
+                    <tr class="infos-battery"><th>Battery</th><td></td></tr>
+                    <tr class="infos-ip"><th>IP</th><td></td></tr>
+                    <tr class="infos-infos"><th>Infos</th><td></td></tr>
+                    <tr class="infos-social"><th>Social Network</th><td></td></tr>
+                  </table>
                 </div>
             </div>
         </div>
@@ -191,6 +200,7 @@ $mysqli->close();
     <script src="index.js"></script>
     <script type="text/javascript">
       var relative = <?= $relative ?>;
+      var type = <?= $type ?>;
     </script>
   </body>
 </html>

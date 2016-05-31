@@ -95,4 +95,26 @@ body {
 }
 .alert112 .heure {
   cursor: help;
+  background: url('../img/admin/time.svg') no-repeat left center;
+  background-size: 20px;
+  line-height: 20px;
+  padding-left: 25px;
+}
+.alert112 .distance {
+  background: url('../img/admin/info.svg') no-repeat left center;
+  background-size: 20px;
+  line-height: 20px;
+  padding-left: 25px;
+}
+.alert112 .batterie {
+  background: url('../img/admin/batt.svg') no-repeat left center;
+  background-size: 20px;
+  line-height: 20px;
+  padding-left: 25px;
+}
+.alert112 .social {
+  background: url('../img/admin/messagerie.svg') no-repeat left center;
+  background-size: 20px;
+  line-height: 20px;
+  padding-left: 25px;
 }

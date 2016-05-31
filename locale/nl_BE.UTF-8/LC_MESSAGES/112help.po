@@ -7,92 +7,94 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-08 13:30+0200\n"
-"PO-Revision-Date: 2016-05-08 13:33+0200\n"
-"Language: nl\n"
+"POT-Creation-Date: 2016-05-31 18:12+0200\n"
+"PO-Revision-Date: 2016-05-31 18:19+0200\n"
+"Language: nl_BE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Last-Translator: Jonathan Beliën\n"
 "Language-Team: \n"
 "X-Generator: Poedit 1.8.7\n"
+"X-Poedit-SourceCharset: UTF-8\n"
 
-#: index.php:79 index.php:94
-msgid "I'M IN DANGER AND I NEED HELP"
-msgstr "IK BEN IN GEVAAR EN IK HEB HULP NODIG"
+#: address.php:109 index.php:164
+msgid "You are connected with 112 emergency services"
+msgstr "U bent in contact met 112 diensten"
 
-#: index.php:86 index.php:101
-msgid "Name"
-msgstr "Naam"
-
-#: index.php:92 index.php:107
-msgid "Phone"
-msgstr "Telefoon"
-
-#: index.php:96 index.php:111
-msgid "Requesting access / Loading location data..."
+#: address.php:159
+msgid "Validate your address"
 msgstr ""
 
-#: index.php:99 index.php:114
-msgid "Latitude"
-msgstr "Breedte"
+#: address.php:166 index.php:320
+msgid "Do you want to cancel 112 call ?"
+msgstr "Wilt het gesprek annuleren ?"
 
-#: index.php:103 index.php:118
-msgid "Longitude"
-msgstr "Lengte"
+#: address.php:169 index.php:323
+msgid "Yes"
+msgstr "Ja"
 
-#: index.php:107 index.php:122
-msgid "Accuracy"
-msgstr "Nauwkeurigheid"
+#: address.php:170 index.php:324
+msgid "No"
+msgstr "Nee"
 
-#: index.php:111 index.php:126
-msgid "Address"
-msgstr "Adres"
+#: index.php:191
+msgid "Send my location"
+msgstr "Mijn locatie verzenden"
 
-#: index.php:115 index.php:130
-msgid "SEND MY LOCATION"
-msgstr "IK STUUR MIJN POSITIE"
+#: index.php:212
+msgid "Choose incident type"
+msgstr "Incident type"
 
-#: index.php:119 index.php:134 info.php:101
-msgid ""
-"Irresponsible use of this emergency service is punishable under federal law."
-msgstr ""
-"Alle personen gebruikers die deze dienst misbruiken worden blootgesteld aan "
-"rechtszaken die kunnen leiden tot strafrechtelijke veroordelingen."
+#: index.php:217
+msgid "Health"
+msgstr "Gezondheid"
 
-#: info.php:78
-msgid "If able, please inform us more about your current situation."
-msgstr ""
-
-#: info.php:84
+#: index.php:221
 msgid "Fire"
 msgstr "Brand"
 
-#: info.php:85
-msgid "Road accident"
-msgstr "Verkeersongeval"
+#: index.php:225
+msgid "Accident"
+msgstr "Ongeval"
 
-#: info.php:86
-msgid "Injury"
-msgstr "Verwonding"
-
-#: info.php:87
+#: index.php:229
 msgid "Violence"
-msgstr "Aanslag"
+msgstr "Geweld"
 
-#: info.php:90
-msgid "Details"
-msgstr "Meer details"
+#: index.php:240
+msgid "Define your address"
+msgstr ""
 
-#: info.php:94
-msgid "SEND DETAILS"
-msgstr "DETAILS VERZENDEN"
+#: index.php:270
+msgid "Please wait..."
+msgstr ""
 
-#: info.php:96
-msgid ""
-"Are you out of danger ? Please let us know by clicking the following button"
-msgstr "Ik heb geen hulp meer nodig ? Klik hier"
+#: index.php:270
+msgid "We are locating you"
+msgstr ""
 
-#: info.php:97
-msgid "I'M SAFE NOW"
-msgstr "IK BEN NIET MEER IN GEVAAR"
+#: index.php:285 index.php:293 index.php:301
+msgid "Your phone number"
+msgstr "Uw telefoonnummer"
+
+#: index.php:308
+msgid "Send direct message"
+msgstr "Stuur een bericht"
+
+#: index.php:309
+msgid "Enter your message"
+msgstr "Vul uw bericht in"
+
+#: index.php:332
+msgid "We have taken your data into account, we contact you as soon as possible."
+msgstr ""
+
+#: index.php:336 index.php:348
+msgid "Close"
+msgstr ""
+
+#: index.php:344
+msgid "Call well ended !"
+msgstr ""

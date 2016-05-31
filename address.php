@@ -106,7 +106,7 @@ if (isset($_REQUEST['new-lat'], $_REQUEST['new-lng'])) {
 
             <!--Champ disant qu'on est en contact avec le 112-->
             <div class="champ-info-112">
-                Vous êtes en contact avec les services du 112
+                <?= _('You are connected with 112 emergency services') ?>
             </div>
 
             <!--Bouton Annulé-->
@@ -119,7 +119,7 @@ if (isset($_REQUEST['new-lat'], $_REQUEST['new-lng'])) {
 
     <!--Conteneur pour entrer l'adresse manuellement-->
     <div class="container container-select-adresse">
-        <form action="/address.php" method="get" id="form-address">
+        <form action="/address.php" method="post" id="form-address">
         <input type="hidden" name="batt" id="batt" value="-1" readonly="readonly">
         <input type="hidden" name="new-lat" id="lat"<?= (isset($_SESSION['lat']) ? ' value="'.floatval($_SESSION['lat']).'"' : '') ?> readonly="readonly">
         <input type="hidden" name="new-lng" id="lng"<?= (isset($_SESSION['lng']) ? ' value="'.floatval($_SESSION['lng']).'"' : '') ?> readonly="readonly">
@@ -156,18 +156,18 @@ if (isset($_REQUEST['new-lat'], $_REQUEST['new-lng'])) {
     <div class="container container-validation-adresse">
         <div class="validation-adresse">
             <button type="submit" class="texte-validation">
-                <span>Valider l'adresse</span>
+                <span><?= _('Validate your address') ?></span>
             </button>
         </div>
     </div>
     <div class="modal-container">
         <div class="modal-inner">
             <div class="description">
-                Voulez-vous annuler l'appel ?
+                <?= _('Do you want to cancel 112 call ?') ?>
             </div>
             <div class="btn-action-container">
-                <button class="up-action">Oui</button>
-                <button class="down-action">Non</button>
+                <button class="up-action"><?= _('Yes') ?></button>
+                <button class="down-action"><?= _('No') ?></button>
             </div>
         </div>
     </div>

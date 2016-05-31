@@ -161,7 +161,7 @@ else if (isset($_REQUEST['action'], $_REQUEST['infos']) && $_REQUEST['action'] =
 
             <!--Champ disant qu'on est en contact avec le 112-->
             <div class="champ-info-112">
-                Vous êtes en contact avec les services du 112
+                <?= _('You are connected with 112 emergency services') ?>
             </div>
 
             <!--Bouton Annulé-->
@@ -174,7 +174,7 @@ else if (isset($_REQUEST['action'], $_REQUEST['infos']) && $_REQUEST['action'] =
     </div>
     <!--conteneur principal avec gros bouton rouge-->
     <div class="container container-btn-send">
-        <form action="index.php" method="get">
+        <form action="index.php" method="post">
             <input type="hidden" name="batt" id="batt" value="-1" readonly="readonly">
             <input type="hidden" name="time" id="time" readonly="readonly">
             <input type="hidden" name="lat" id="lat" readonly="readonly">
@@ -188,7 +188,7 @@ else if (isset($_REQUEST['action'], $_REQUEST['infos']) && $_REQUEST['action'] =
             <input type="hidden" name="phone" id="phone" value="<?= htmlentities($_SESSION['phone']) ?>" readonly="readonly"><br>
 <?php } ?>
 
-            <button id="btn-send" name="action" value="send" disabled="disabled">Send my location</button>
+            <button id="btn-send" name="action" value="send" disabled="disabled"><?= _('Send my location') ?></button>
         </form>
     </div>
      <!--Conteneur pour entrer l'adresse manuellement-->
@@ -205,31 +205,28 @@ else if (isset($_REQUEST['action'], $_REQUEST['infos']) && $_REQUEST['action'] =
     </div>
     <!--conteneur principal avec les 4 boutons icône représentant le type d'incident-->
     <div class="container container-main">
-        <form method="get" action="/index.php">
+        <form method="post" action="/index.php">
             <div class="main">
                 <div class="description-alert-container col-100">
                     <div class="info-action-alert">
-                        Choisissez le type d'incident
-                    </div>
-                    <div class="description-alert">
-                        La description d'une alert une fois qu'on en a sélectionné une.
+                        <?= _('Choose incident type') ?>
                     </div>
                 </div>
                 <div class="btn-container col-50">
                     <button class="btn sante<?= (isset($_SESSION['type']) && $_SESSION['type'] == 4 ? ' active' : '') ?>" name="type" value="4"></button>
-                    <div class="type-incident">Sante</div>
+                    <div class="type-incident"><?= _('Health') ?></div>
                 </div>
                 <div class="btn-container col-50">
                     <button class="btn feu<?= (isset($_SESSION['type']) && $_SESSION['type'] == 1 ? ' active' : '') ?>" name="type" value="1"></button>
-                    <div class="type-incident">Incendie</div>
+                    <div class="type-incident"><?= _('Fire') ?></div>
                 </div>
                 <div class="btn-container col-50">
                     <button class="btn accident<?= (isset($_SESSION['type']) && $_SESSION['type'] == 2 ? ' active' : '') ?>" name="type" value="2"></button>
-                    <div class="type-incident">Accident</div>
+                    <div class="type-incident"><?= _('Accident') ?></div>
                 </div>
                 <div class="btn-container col-50">
                     <button class="btn violence<?= (isset($_SESSION['type']) && $_SESSION['type'] == 8 ? ' active' : '') ?>" name="type" value="8"></button>
-                    <div class="type-incident">Violence</div>
+                    <div class="type-incident"><?= _('Violence') ?></div>
                 </div>
             </div>
         </form>
@@ -240,7 +237,7 @@ else if (isset($_REQUEST['action'], $_REQUEST['infos']) && $_REQUEST['action'] =
             <div class="icon"></div>
             <div class="champ-adresse">
                 <div class="adresse">
-                    Veuillez indiquer votre adresse.
+                    <?= _('Define your address') ?>
                 </div>
                 <div class="champ-input">
                     <input id="adresse-geolocalise" type="text" />
@@ -270,8 +267,7 @@ else if (isset($_REQUEST['action'], $_REQUEST['infos']) && $_REQUEST['action'] =
                 <div class="icon-geolocation"></div>
             </div>
             <div class="info-geolocalisation">
-                Nous vous localisons<br />
-                <span>Veuillez patienter</span>
+                <?= _('We are locating you') ?><br><?= _('Please wait...') ?>
             </div>
         </footer>
     </div>
@@ -286,7 +282,7 @@ else if (isset($_REQUEST['action'], $_REQUEST['infos']) && $_REQUEST['action'] =
                 <div class="icon whatsapp"></div>
                 <div class="form-container">
                     <h3>WhatsApp</h3>
-                    <input type="text" name="whatsapp" placeholder="Votre numéro de téléphone">
+                    <input type="tel" name="whatsapp" placeholder="<?= _('Your phone number') ?>"<?= (isset($_SESSION['phone']) ? ' value="'.htmlentities($_SESSION['phone']).'"' : '') ?>>
                 </div>
                 <button class="send" name="action" value="send-whatsapp"></button>
             </div>
@@ -294,7 +290,7 @@ else if (isset($_REQUEST['action'], $_REQUEST['infos']) && $_REQUEST['action'] =
                 <div class="icon messenger"></div>
                 <div class="form-container">
                     <h3>Messenger</h3>
-                    <input type="text" name="messenger" placeholder="Votre numéro de téléphone">
+                    <input type="tel" name="messenger" placeholder="<?= _('Your phone number') ?>"<?= (isset($_SESSION['phone']) ? ' value="'.htmlentities($_SESSION['phone']).'"' : '') ?>>
                 </div>
                 <button class="send" name="action" value="send-messenger"></button>
             </div>
@@ -302,15 +298,15 @@ else if (isset($_REQUEST['action'], $_REQUEST['infos']) && $_REQUEST['action'] =
                 <div class="icon viber"></div>
                 <div class="form-container">
                     <h3>Viber</h3>
-                    <input type="text" name="viber" placeholder="Votre numéro de téléphone">
+                    <input type="tel" name="viber" placeholder="<?= _('Your phone number') ?>"<?= (isset($_SESSION['phone']) ? ' value="'.htmlentities($_SESSION['phone']).'"' : '') ?>>
                 </div>
                 <button class="send" name="action" value="send-viber"></button>
             </div>
             <div class="reseau-social message-direct">
                 <div class="icon btn-112">112</div>
                 <div class="form-container">
-                    <h3>Envoyer un message direct</h3>
-                    <textarea name="infos" cols="30" rows="10" placeholder="Introduisez votre message"></textarea>
+                    <h3><?= _('Send direct message') ?></h3>
+                    <textarea name="infos" cols="30" rows="10" placeholder="<?= _('Enter your message') ?>"></textarea>
                 </div>
                 <button class="send" name="action" value="send-infos"></button>
             </div>
@@ -321,11 +317,11 @@ else if (isset($_REQUEST['action'], $_REQUEST['infos']) && $_REQUEST['action'] =
     <div class="modal-container">
         <div class="modal-inner">
             <div class="description">
-                Voulez-vous annuler l'appel ?
+                <?= _('Do you want to cancel 112 call ?') ?>
             </div>
             <div class="btn-action-container">
-                <button class="up-action">Oui</button>
-                <button class="down-action">Non</button>
+                <button class="up-action"><?= _('Yes') ?></button>
+                <button class="down-action"><?= _('No') ?></button>
             </div>
         </div>
     </div>
@@ -333,11 +329,11 @@ else if (isset($_REQUEST['action'], $_REQUEST['infos']) && $_REQUEST['action'] =
     <div class="modal-container confirmation-appel<?= (isset($close) && $close === TRUE ? ' active' : '') ?>">
         <div class="modal-inner">
             <div class="description">
-                Nous avons bien pris en compte vos données, nous vous contactons dans les plus brefs délais
+                <?= _('We have taken your data into account, we contact you as soon as possible.') ?>
             </div>
             <!--
             <div class="btn-wrapper">
-                <button onclick="window.close();">Fermer</button>
+                <button onclick="window.close();"><?= _('Close') ?></button>
             </div>
             -->
         </div>
@@ -345,11 +341,11 @@ else if (isset($_REQUEST['action'], $_REQUEST['infos']) && $_REQUEST['action'] =
     <div class="modal-container confirmation-appel<?= (isset($_GET['clear']) ? ' active' : '') ?>">
         <div class="modal-inner">
             <div class="description">
-                Appel bien terminé.
+                <?= _('Call well ended !') ?>
             </div>
             <!--
             <div class="btn-wrapper">
-                <button onclick="window.close();">Fermer</button>
+                <button onclick="window.close();"><?= _('Close') ?></button>
             </div>
             -->
         </div>

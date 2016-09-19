@@ -19,6 +19,8 @@ $qsz .= " ORDER BY `datetime` DESC";
 
 $q = $mysqli->query($qsz) or trigger_error($mysqli->error);
 while ($r = $q->fetch_assoc()) {
+  $skip = FALSE;
+
   if (is_null($r['address'])) {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$r['lat'].','.$r['lng'].'&sensor=false');
@@ -38,31 +40,38 @@ while ($r = $q->fetch_assoc()) {
       $qsz .= ",`address_time` = '".$r['address_time']."'";
       $qsz .= " WHERE `id` = ".$r['id']." LIMIT 1";
       $mysqli->query($qsz) or trigger_error($mysqli->error);
+    } else {
+      $mysqli->query("INSERT INTO `help_invalid` (SELECT * FROM `help` WHERE `id` = ".$r['id']." LIMIT 1)") or trigger_error($mysqli->error);
+      $mysqli->query("DELETE FROM `help` WHERE `id` = ".$r['id']." LIMIT 1") or trigger_error($mysqli->error);
+
+      $skip = TRUE;
     }
   }
 
-  $datetime1 = new DateTime();
-  $datetime2 = new DateTime($r['datetime']);
-  $interval = $datetime1->diff($datetime2);
-  if ($interval->y > 0) $r['ago'] = sprintf(_('%d year ago'), $interval->y);
-  else if ($interval->m > 0) $r['ago'] = sprintf(_('%d month ago'), $interval->m);
-  else if ($interval->d > 0) $r['ago'] = sprintf(_('%dd ago'), $interval->d);
-  else if ($interval->h > 0) $r['ago'] = sprintf(_('%dh ago'), $interval->h);
-  else if ($interval->i > 0) $r['ago'] = sprintf(_('%dm ago'), $interval->i);
-  else if ($interval->s > 0) $r['ago'] = sprintf(_('%ds ago'), $interval->s);
+  if (!isset($skip) || $skip !== TRUE) {
+    $datetime1 = new DateTime();
+    $datetime2 = new DateTime($r['datetime']);
+    $interval = $datetime1->diff($datetime2);
+    if ($interval->y > 0) $r['ago'] = sprintf(_('%d year ago'), $interval->y);
+    else if ($interval->m > 0) $r['ago'] = sprintf(_('%d month ago'), $interval->m);
+    else if ($interval->d > 0) $r['ago'] = sprintf(_('%dd ago'), $interval->d);
+    else if ($interval->h > 0) $r['ago'] = sprintf(_('%dh ago'), $interval->h);
+    else if ($interval->i > 0) $r['ago'] = sprintf(_('%dm ago'), $interval->i);
+    else if ($interval->s > 0) $r['ago'] = sprintf(_('%ds ago'), $interval->s);
 
-  if (preg_match('/^netname: *(.*)$/im', $r['whois'], $matches) == 1) $r['netname'] = $matches[1];
+    if (preg_match('/^netname: *(.*)$/im', $r['whois'], $matches) == 1) $r['netname'] = $matches[1];
 
-  $feature = array(
-    'type' => 'Feature',
-    'id' => $r['id'],
-    'properties' => $r,
-    'geometry' => array(
-      'type' => 'Point',
-      'coordinates' => array(floatval($r['lng']), floatval($r['lat']))
-    )
-  );
-  $json['features'][] = $feature;
+    $feature = array(
+      'type' => 'Feature',
+      'id' => $r['id'],
+      'properties' => $r,
+      'geometry' => array(
+        'type' => 'Point',
+        'coordinates' => array(floatval($r['lng']), floatval($r['lat']))
+      )
+    );
+    $json['features'][] = $feature;
+  }
 }
 $q->free();
 

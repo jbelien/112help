@@ -188,7 +188,7 @@ else if (isset($_REQUEST['action'], $_REQUEST['infos']) && $_REQUEST['action'] =
             <input type="hidden" name="phone" id="phone" value="<?= htmlentities($_SESSION['phone']) ?>" readonly="readonly"><br>
 <?php } ?>
 
-            <button id="btn-send" name="action" value="send" disabled="disabled"><?= _('Send my location') ?></button>
+            <button id="btn-send" name="action" value="send" disabled="disabled"><?= _('Locate me') ?></button>
         </form>
     </div>
      <!--Conteneur pour entrer l'adresse manuellement-->

@@ -40,8 +40,8 @@ msgid "No"
 msgstr "Non"
 
 #: index.php:191
-msgid "Send my location"
-msgstr "Envoyer ma position"
+msgid "Locate me"
+msgstr "Localisez moi"
 
 #: index.php:212
 msgid "Choose incident type"

@@ -2,7 +2,7 @@ var map, vectorSource, circleSource, vectorLayer, circleLayer;
 
 var baselayerBing       = new ol.layer.Tile({ source: new ol.source.BingMaps({ key: 'AqrncJ8kQb58T8fylEPY7nZHRcEMGqyL_9WUoTlMT_dufzDUbZPz9oKOWe8UmuVZ', imagerySet: 'Road' }) });
 var baselayerBingAerial = new ol.layer.Tile({ source: new ol.source.BingMaps({ key: 'AqrncJ8kQb58T8fylEPY7nZHRcEMGqyL_9WUoTlMT_dufzDUbZPz9oKOWe8UmuVZ', imagerySet: 'Aerial', maxZoom: 19 }) });
-var baselayerMapQuest   = new ol.layer.Tile({ source: new ol.source.MapQuest({ layer: 'osm' }) });
+var baselayerMapbox     = new ol.layer.Tile({ source: new ol.source.XYZ({ attributions: '© <a href="https://www.mapbox.com/map-feedback/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>', url: 'https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiamJlbGllbiIsImEiOiJjaXRhOGVwMG0wMDBwMm5taXQ4NzA4M2M1In0.jTex5kATjsdBupfCB3NP1A' }) });
 // http://cirb.brussels/fr/nos-solutions/urbis-solutions/urbis-tools
 var baselayerUrbIS      = new ol.layer.Tile({ source: new ol.source.TileWMS({ url: 'http://geoserver.gis.irisnet.be/urbis/wms/', params: { LAYERS: 'urbisFR' }, attributions: [ '&copy; CIRB-CIBG' ] }) });
 var baselayerUrbIS_P    = new ol.layer.Tile({ source: new ol.source.TileWMS({ url: 'http://geoserver.gis.irisnet.be/urbis/wms/', params: { LAYERS: 'urbis:ortho2014' }, attributions: [ '&copy; CIRB-CIBG' ] }) });
@@ -27,7 +27,7 @@ $(document).ready(function() {
   map = new ol.Map({
     target: 'map',
     layers: [
-      baselayerMapQuest,
+      baselayerMapbox,
       circleLayer,
       vectorLayer
     ],

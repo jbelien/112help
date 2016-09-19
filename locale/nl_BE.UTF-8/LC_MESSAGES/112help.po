@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-05-31 18:12+0200\n"
-"PO-Revision-Date: 2016-05-31 18:19+0200\n"
+"PO-Revision-Date: 2016-05-31 21:50+0200\n"
 "Language: nl_BE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,11 +25,11 @@ msgstr "U bent in contact met 112 diensten"
 
 #: address.php:159
 msgid "Validate your address"
-msgstr ""
+msgstr "Bevestig uw adres"
 
 #: address.php:166 index.php:320
 msgid "Do you want to cancel 112 call ?"
-msgstr "Wilt het gesprek annuleren ?"
+msgstr "Wilt u het gesprek annuleren ?"
 
 #: address.php:169 index.php:323
 msgid "Yes"
@@ -40,8 +40,8 @@ msgid "No"
 msgstr "Nee"
 
 #: index.php:191
-msgid "Send my location"
-msgstr "Mijn locatie verzenden"
+msgid "Locate me"
+msgstr "Lokaliseer me"
 
 #: index.php:212
 msgid "Choose incident type"
@@ -65,15 +65,15 @@ msgstr "Geweld"
 
 #: index.php:240
 msgid "Define your address"
-msgstr ""
+msgstr "Bepaal uw adres"
 
 #: index.php:270
 msgid "Please wait..."
-msgstr ""
+msgstr "Gelieve te wachten..."
 
 #: index.php:270
 msgid "We are locating you"
-msgstr ""
+msgstr "Wij lokaliseren u"
 
 #: index.php:285 index.php:293 index.php:301
 msgid "Your phone number"
@@ -89,12 +89,12 @@ msgstr "Vul uw bericht in"
 
 #: index.php:332
 msgid "We have taken your data into account, we contact you as soon as possible."
-msgstr ""
+msgstr "We hebben uw gegevens geregistreerd en wij contacteren u zo spoedig mogelijk."
 
 #: index.php:336 index.php:348
 msgid "Close"
-msgstr ""
+msgstr "Sluiten"
 
 #: index.php:344
 msgid "Call well ended !"
-msgstr ""
+msgstr "Oproep goed beëindigd !"

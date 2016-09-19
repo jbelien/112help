@@ -33,7 +33,7 @@ $mysqli->close();
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>112 Help - Backend</title>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/ol3/3.15.1/ol.css">
+    <link rel="stylesheet" href="ol.css">
     <link rel="stylesheet" href="style.css">
   </head>
 
@@ -196,7 +196,7 @@ $mysqli->close();
 
     <script src="//code.jquery.com/jquery-1.12.3.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/ol3/3.16.0/ol.js"></script>
+    <script src="ol-debug.js"></script>
     <script src="index.js"></script>
     <script type="text/javascript">
       var relative = <?= $relative ?>;

@@ -8,4 +8,4 @@ Le projet a remporté le prix "Quick Win" (projet le plus susceptible d'être mi
 
 * Marketing & Communication : [Loïc Jaillat](https://twitter.com/LoicJaillat)
 * Graphisme : [Ricardo Martinez](https://twitter.com/ItsRiikc)
-* Développemebt : [Jonathan Beliën](https://github.com/jbelien)
+* Développement : [Jonathan Beliën](https://github.com/jbelien)
